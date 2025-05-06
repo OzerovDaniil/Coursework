@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiManagementSystem.Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiManagementSystem.Infrastructure", "SushiManagementSystem.Infrastructure\SushiManagementSystem.Infrastructure.csproj", "{E48B09F8-818C-4236-A471-9F58434B0B93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SushiManagementSystem.Domain", "SushiManagementSystem.Domain\SushiManagementSystem.Domain.csproj", "{AFE44C8B-4F45-404C-A829-D95B241B533C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{E48B09F8-818C-4236-A471-9F58434B0B93}.Release|x64.Build.0 = Release|Any CPU
 		{E48B09F8-818C-4236-A471-9F58434B0B93}.Release|x86.ActiveCfg = Release|Any CPU
 		{E48B09F8-818C-4236-A471-9F58434B0B93}.Release|x86.Build.0 = Release|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Debug|x64.Build.0 = Debug|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Debug|x86.Build.0 = Debug|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Release|x64.ActiveCfg = Release|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Release|x64.Build.0 = Release|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Release|x86.ActiveCfg = Release|Any CPU
+		{AFE44C8B-4F45-404C-A829-D95B241B533C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

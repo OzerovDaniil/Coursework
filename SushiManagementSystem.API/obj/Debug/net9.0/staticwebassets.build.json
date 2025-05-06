@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Dzr7nGfqqBRgocnr6aErva4hBMzmqNn3cshoijdpNoE=",
+  "Source": "SushiManagementSystem.API",
+  "BasePath": "_content/SushiManagementSystem.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

@@ -1,0 +1,6 @@
+@SushiManagementSystem.API_HostAddress = http://localhost:5067
+
+GET {{SushiManagementSystem.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

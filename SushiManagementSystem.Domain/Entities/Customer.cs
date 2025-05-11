@@ -16,7 +16,6 @@ namespace SushiManagementSystem.Domain.Entities
         public required string PhoneNumber { get; set; }
         public string? Address { get; set; }
 
-        // Связь с заказами клиента
         public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

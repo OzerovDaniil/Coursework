@@ -4,7 +4,7 @@ using SushiManagementSystem.Domain.Entities;
 
 namespace SushiManagementSystem.Domain.Configurations
 {
-       public class UserConfiguration : IEntityTypeConfiguration<Employee>
+       public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
        {
               public void Configure(EntityTypeBuilder<Employee> builder)
               {

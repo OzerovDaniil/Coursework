@@ -1,0 +1,51 @@
+## Ignore Visual Studio Code
+.vscode/
+*.code-workspace
+
+## Ignore build output
+bin/
+obj/
+out/
+
+## Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Ignore Rider
+.idea/
+*.sln.iml
+
+## Ignore runtime files
+*.db
+*.log
+*.pid
+*.tmp
+
+## Ignore package manager directories
+node_modules/
+packages/
+
+## Ignore VS Test
+TestResults/
+*.coverage
+*.coveragexml
+
+## Ignore EF Core migration snapshots
+Migrations/*.Designer.cs
+Migrations/*ModelSnapshot.cs
+
+## Ignore secrets
+secrets.json
+appsettings.Development.json
+
+## Ignore Docker artifacts
+docker-compose.override.yml
+**/.docker/
+
+## Ignore OS/system files
+.DS_Store
+Thumbs.db
+
+.fake

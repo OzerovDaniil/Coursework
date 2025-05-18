@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню - Суши-Мастер</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Суши-Мастер</div>
+            <ul class="menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="orders.html">Заказы</a></li>
+                <li><a href="menu.html">Меню</a></li>
+                <li><a href="admin.html">Администрирование</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Управление меню</h1>
+        
+        <div class="menu-container">
+            <div class="menu-sidebar">
+                <h2>Категории</h2>
+                <ul id="categoryList" class="category-list">
+                    <li class="active" data-category="all">Все блюда</li>
+                    <li data-category="sushi">Суши</li>
+                    <li data-category="rolls">Роллы</li>
+                    <li data-category="sets">Сеты</li>
+                    <li data-category="drinks">Напитки</li>
+                    <li data-category="desserts">Десерты</li>
+                </ul>
+                
+                <div class="admin-controls">
+                    <h2>Управление</h2>
+                    <button id="addItemBtn" class="primary-btn">Добавить блюдо</button>
+                    <button id="addCategoryBtn">Добавить категорию</button>
+                </div>
+            </div>
+            
+            <div class="menu-content">
+                <div class="search-filter">
+                    <input type="text" id="searchMenu" placeholder="Поиск по названию...">
+                    <select id="sortMenu">
+                        <option value="name">По названию</option>
+                        <option value="price_asc">По цене (возр)</option>
+                        <option value="price_desc">По цене (убыв)</option>
+                        <option value="popularity">По популярности</option>
+                    </select>
+                </div>
+                
+                <div id="menuItemsList" class="menu-items-grid">
+                    <!-- Здесь будут отображаться блюда меню -->
+                    <p class="loading-indicator">Загрузка меню...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Суши-Мастер. Все права защищены.</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

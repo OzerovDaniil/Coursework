@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрирование - Суши-Мастер</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Суши-Мастер</div>
+            <ul class="menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="orders.html">Заказы</a></li>
+                <li><a href="menu.html">Меню</a></li>
+                <li><a href="admin.html">Администрирование</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Администрирование системы</h1>
+        
+        <div class="admin-panel">
+            <div class="admin-sidebar">
+                <h2>Разделы</h2>
+                <ul class="admin-nav">
+                    <li class="active" data-section="employees">Сотрудники</li>
+                    <li data-section="inventory">Склад и ингредиенты</li>
+                    <li data-section="reports">Отчеты</li>
+                    <li data-section="settings">Настройки</li>
+                </ul>
+            </div>
+            
+            <div class="admin-content">
+                <!-- Раздел сотрудников -->
+                <div id="employeesSection" class="admin-section active">
+                    <h2>Управление сотрудниками</h2>
+                    <button id="addEmployeeBtn" class="primary-btn">Добавить сотрудника</button>
+                    
+                    <div class="search-filter">
+                        <input type="text" id="searchEmployees" placeholder="Поиск сотрудника...">
+                        <select id="filterRole">
+                            <option value="all">Все роли</option>
+                            <option value="admin">Администраторы</option>
+                            <option value="chef">Повара</option>
+                            <option value="waiter">Официанты</option>
+                            <option value="cashier">Кассиры</option>
+                        </select>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Имя</th>
+                                <th>Должность</th>
+                                <th>Контакт</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesList">
+                            <!-- Здесь будут отображаться сотрудники -->
+                            <tr>
+                                <td colspan="6" class="loading-cell">Загрузка данных...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Раздел склада и ингредиентов -->
+                <div id="inventorySection" class="admin-section">
+                    <h2>Склад и ингредиенты</h2>
+                    <button id="addIngredientBtn" class="primary-btn">Добавить ингредиент</button>
+                    <button id="registerDeliveryBtn">Зарегистрировать поставку</button>
+                    
+                    <div class="inventory-stats">
+                        <div class="stat-card">
+                            <h3>Всего ингредиентов</h3>
+                            <p class="stat-value" id="totalIngredients">-</p>
+                        </div>
+                        <div class="stat-card warning">
+                            <h3>Заканчиваются</h3>
+                            <p class="stat-value" id="lowStockCount">-</p>
+                        </div>
+                        <div class="stat-card danger">
+                            <h3>Отсутствуют</h3>
+                            <p class="stat-value" id="outOfStockCount">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <input type="text" id="searchInventory" placeholder="Поиск по складу...">
+                        <select id="filterStock">
+                            <option value="all">Все ингредиенты</option>
+                            <option value="low">Заканчиваются</option>
+                            <option value="out">Отсутствуют</option>
+                        </select>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Категория</th>
+                                <th>Количество</th>
+                                <th>Ед. изм.</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryList">
+                            <!-- Здесь будут отображаться ингредиенты -->
+                            <tr>
+                                <td colspan="7" class="loading-cell">Загрузка данных...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Раздел отчетов -->
+                <div id="reportsSection" class="admin-section">
+                    <h2>Отчеты и аналитика</h2>
+                    
+                    <div class="report-filters">
+                        <div class="date-range">
+                            <label for="startDate">С:</label>
+                            <input type="date" id="startDate">
+                            <label for="endDate">По:</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <button id="generateReportBtn" class="primary-btn">Сформировать отчет</button>
+                    </div>
+                    
+                    <div class="report-types">
+                        <div class="report-card active" data-report="sales">
+                            <h3>Продажи</h3>
+                            <p>Анализ продаж по периодам</p>
+                        </div>
+                        <div class="report-card" data-report="popular">
+                            <h3>Популярные блюда</h3>
+                            <p>Топ продаваемых позиций</p>
+                        </div>
+                        <div class="report-card" data-report="inventory">
+                            <h3>Расход ингредиентов</h3>
+                            <p>Анализ использования ингредиентов</p>
+                        </div>
+                        <div class="report-card" data-report="profit">
+                            <h3>Выручка и прибыль</h3>
+                            <p>Финансовые показатели</p>
+                        </div>
+                    </div>
+                    
+                    <div class="report-container">
+                        <div id="reportChart" class="chart">
+                            <!-- Здесь будет отображаться график -->
+                            <p class="chart-placeholder">Выберите тип отчета и период</p>
+                        </div>
+                        
+                        <div id="reportTable" class="report-table">
+                            <!-- Здесь будет отображаться таблица с данными -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Раздел настроек -->
+                <div id="settingsSection" class="admin-section">
+                    <h2>Настройки системы</h2>
+                    
+                    <div class="settings-container">
+                        <div class="settings-card">
+                            <h3>Основные настройки</h3>
+                            <form id="generalSettingsForm" class="settings-form">
+                                <div class="form-group">
+                                    <label for="restaurantName">Название заведения:</label>
+                                    <input type="text" id="restaurantName" name="restaurantName" value="Суши-Мастер">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactPhone">Контактный телефон:</label>
+                                    <input type="tel" id="contactPhone" name="contactPhone" value="+7 (123) 456-78-90">
+                                </div>
+                                <div class="form-group">
+                                    <label for="workingHours">Часы работы:</label>
+                                    <input type="text" id="workingHours" name="workingHours" value="10:00 - 22:00">
+                                </div>
+                                <button type="submit" class="primary-btn">Сохранить</button>
+                            </form>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Настройки системы</h3>
+                            <form id="systemSettingsForm" class="settings-form">
+                                <div class="form-group checkbox-group">
+                                    <input type="checkbox" id="enableNotifications" name="enableNotifications" checked>
+                                    <label for="enableNotifications">Включить уведомления</label>
+                                </div>
+                                <div class="form-group checkbox-group">
+                                    <input type="checkbox" id="autoBackup" name="autoBackup" checked>
+                                    <label for="autoBackup">Автоматическое резервное копирование</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="backupFrequency">Частота копирования:</label>
+                                    <select id="backupFrequency" name="backupFrequency">
+                                        <option value="daily">Ежедневно</option>
+                                        <option value="weekly">Еженедельно</option>
+                                        <option value="monthly">Ежемесячно</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="primary-btn">Сохранить</button>
+                            </form>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Безопасность</h3>
+                            <form id="securitySettingsForm" class="settings-form">
+                                <div class="form-group">
+                                    <label for="passwordExpiry">Срок действия пароля (дней):</label>
+                                    <input type="number" id="passwordExpiry" name="passwordExpiry" value="90">
+                                </div>
+                                <div class="form-group checkbox-group">
+                                    <input type="checkbox" id="twoFactorAuth" name="twoFactorAuth">
+                                    <label for="twoFactorAuth">Двухфакторная аутентификация</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sessionTimeout">Таймаут сессии (минуты):</label>
+                                    <input type="number" id="sessionTimeout" name="sessionTimeout" value="30">
+                                </div>
+                                <button type="submit" class="primary-btn">Сохранить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Суши-Мастер. Все права защищены.</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

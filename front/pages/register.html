@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Суши-Мастер</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-box">
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <input type="text" id="firstName" name="firstName" placeholder="Имя" required>
+                <input type="text" id="lastName" name="lastName" placeholder="Фамилия" required>
+                <input type="email" id="email" name="email" placeholder="Почта" required>
+                <input type="tel" id="phone" name="phone" placeholder="Телефон" required>
+                <input type="password" id="password" name="password" placeholder="Пароль" required>
+                <select id="role" name="role" required>
+                    <option value="user">Обычный пользователь</option>
+                    <option value="admin">Администратор</option>
+                </select>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <p>Уже есть аккаунт? <a href="../index.html">Войти</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Суши-Мастер. Все права защищены.</p>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

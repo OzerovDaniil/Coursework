@@ -43,6 +43,9 @@ const api = {
     login: (username, password) => {
         return fetchApi('auth/login', 'POST', { username, password });
     },
+    register: (userData) => {
+        return fetchApi('auth/register', 'POST', userData);
+    },
     
     // Работа с меню
     getMenuItems: () => {

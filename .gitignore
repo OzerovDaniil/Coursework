@@ -47,5 +47,5 @@ docker-compose.override.yml
 ## Ignore OS/system files
 .DS_Store
 Thumbs.db
-
+log-*.txt
 .fake

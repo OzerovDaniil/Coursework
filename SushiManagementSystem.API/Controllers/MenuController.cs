@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SushiManagementSystem.Application.DTOs;
 using SushiManagementSystem.Application.Interfaces;
-using SushiManagementSystem.Application.Services;
+using SushiManagementSystem.API.Filters;
 using System.Threading.Tasks;
 
 namespace SushiManagementSystem.API.Controllers
@@ -21,12 +18,48 @@ namespace SushiManagementSystem.API.Controllers
             _menuService = menuService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetMenuItems([FromQuery] MenuItemFilterDto filter)
         {
-            // Adjust the arguments below to match the actual method signature of GetMenuItemsAsync
-            var menuItems = await _menuService.GetMenuItemsAsync();
+            var menuItems = await _menuService.GetMenuItemsAsync(filter);
             return Ok(menuItems);
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMenuItemById(int id)
+        {
+            var menuItem = await _menuService.GetMenuItemByIdAsync(id);
+            if (menuItem == null) return NotFound();
+            return Ok(menuItem);
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ValidationFilter))]
+        [HttpPost]
+        public async Task<IActionResult> AddMenuItem([FromBody] MenuItemDto menuItemDto)
+        {
+            await _menuService.AddMenuItemAsync(menuItemDto);
+            return CreatedAtAction(nameof(GetMenuItemById), new { id = menuItemDto.Id }, menuItemDto);
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ValidationFilter))]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMenuItem(int id, [FromBody] MenuItemDto menuItemDto)
+        {
+            if (id != menuItemDto.Id) return BadRequest();
+            await _menuService.UpdateMenuItemAsync(id, menuItemDto);
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMenuItem(int id)
+        {
+            await _menuService.DeleteMenuItemAsync(id);
+            return NoContent();
         }
     }
 }

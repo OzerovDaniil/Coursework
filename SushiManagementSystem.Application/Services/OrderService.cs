@@ -6,7 +6,6 @@ using AutoMapper;
 using SushiManagementSystem.Application.DTOs;
 using SushiManagementSystem.Application.Interfaces;
 using SushiManagementSystem.Domain.Entities;
-using SushiManagementSystem.Infrastructure.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

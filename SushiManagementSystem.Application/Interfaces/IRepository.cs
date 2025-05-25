@@ -15,6 +15,7 @@ namespace SushiManagementSystem.Application.Interfaces
         void Delete(T entity);
         IQueryable<T> GetQueryable();
         Task<T> GetByUsernameAsync(string username);
+        Task<IEnumerable<T>> GetMenuItemsAsync(Expression<Func<T, bool>> predicate);
 
     }
 }

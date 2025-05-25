@@ -36,5 +36,19 @@ namespace SushiManagementSystem.Infrastructure.Repositories
         public void Update(T entity) => _dbSet.Update(entity);
         public void Delete(T entity) => _dbSet.Remove(entity);
         public IQueryable<T> GetQueryable() => _dbSet.AsQueryable();
+
+        public async Task<T> GetByUsernameAsync(string username)
+        {
+            var property = typeof(T).GetProperty("Username");
+            if (property == null)
+                throw new InvalidOperationException($"Type {typeof(T).Name} does not contain a property named 'Username'.");
+
+            return await _dbSet.FirstOrDefaultAsync(e => EF.Property<string>(e, "Username") == username);
+        }
+
+        public async Task<IEnumerable<T>> GetMenuItemsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
     }
 }

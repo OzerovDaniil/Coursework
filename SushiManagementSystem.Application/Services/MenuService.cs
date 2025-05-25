@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using AutoMapper;
 using SushiManagementSystem.Application.DTOs;
 using SushiManagementSystem.Application.Interfaces;
 using SushiManagementSystem.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SushiManagementSystem.Application.Services
 {
@@ -41,7 +39,7 @@ namespace SushiManagementSystem.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateMenuItemAsync(MenuItemDto menuItemDto)
+        public async Task UpdateMenuItemAsync(int id, MenuItemDto menuItemDto)
         {
             var menuItem = _mapper.Map<MenuItem>(menuItemDto);
             _unitOfWork.MenuItems.Update(menuItem);
@@ -57,11 +55,21 @@ namespace SushiManagementSystem.Application.Services
                 await _unitOfWork.SaveChangesAsync();
             }
         }
-        public async Task<IEnumerable<MenuItemDto>> GetMenuItemsAsync()
+        public async Task<IEnumerable<MenuItemDto>> GetMenuItemsAsync(MenuItemFilterDto filter)
         {
-            var menuItems = await _unitOfWork.MenuItems.GetAllAsync();
+            // Создаём выражение фильтра на основе полей filter
+            Expression<Func<MenuItem, bool>> predicate = item =>
+                (string.IsNullOrEmpty(filter.Name) || item.Name.Contains(filter.Name)) &&
+                (!filter.MinPrice.HasValue || item.Price >= filter.MinPrice.Value) &&
+                (!filter.MaxPrice.HasValue || item.Price <= filter.MaxPrice.Value);
+
+            // Передаём выражение в репозиторий
+            var menuItems = await _unitOfWork.MenuItems.FindAsync(predicate);
+
+            // Преобразуем результат в DTO и возвращаем
             return _mapper.Map<IEnumerable<MenuItemDto>>(menuItems);
         }
+
 
     }
 }

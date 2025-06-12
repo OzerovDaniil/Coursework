@@ -1,69 +1,72 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Меню - Суши-Мастер</title>
+    <title>Меню - Суші-Майстер</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
     <header>
         <nav>
-            <div class="logo">Суши-Мастер</div>
+            <div class="logo">Суші-Майстер</div>
             <ul class="menu">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="orders.html">Заказы</a></li>
+                <li><a href="../index.html">Головна</a></li>
+                <li><a href="orders.html">Замовлення</a></li>
                 <li><a href="menu.html">Меню</a></li>
-                <li><a href="admin.html">Администрирование</a></li>
+                <li><a href="admin.html">Адміністрування</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <h1>Управление меню</h1>
-        
+        <h1>Управління меню</h1>
+
         <div class="menu-container">
             <div class="menu-sidebar">
-                <h2>Категории</h2>
+                <h2>Категорії</h2>
                 <ul id="categoryList" class="category-list">
-                    <li class="active" data-category="all">Все блюда</li>
-                    <li data-category="sushi">Суши</li>
-                    <li data-category="rolls">Роллы</li>
-                    <li data-category="sets">Сеты</li>
-                    <li data-category="drinks">Напитки</li>
-                    <li data-category="desserts">Десерты</li>
+                    <li class="active" data-category="all">Всі страви</li>
+                    <li data-category="sushi">Суші</li>
+                    <li data-category="rolls">Роли</li>
+                    <li data-category="sets">Сети</li>
+                    <li data-category="drinks">Напої</li>
+                    <li data-category="desserts">Десерти</li>
                 </ul>
-                
+
                 <div class="admin-controls">
-                    <h2>Управление</h2>
-                    <button id="addItemBtn" class="primary-btn">Добавить блюдо</button>
-                    <button id="addCategoryBtn">Добавить категорию</button>
+                    <h2>Управління</h2>
+                    <button id="addItemBtn" class="primary-btn">Додати страву</button>
+                    <button id="addCategoryBtn">Додати категорію</button>
                 </div>
             </div>
-            
+
             <div class="menu-content">
                 <div class="search-filter">
-                    <input type="text" id="searchMenu" placeholder="Поиск по названию...">
+                    <input type="text" id="searchMenu" placeholder="Пошук за назвою...">
                     <select id="sortMenu">
-                        <option value="name">По названию</option>
-                        <option value="price_asc">По цене (возр)</option>
-                        <option value="price_desc">По цене (убыв)</option>
-                        <option value="popularity">По популярности</option>
+                        <option value="name">За назвою</option>
+                        <option value="price_asc">За ціною (зростання)</option>
+                        <option value="price_desc">За ціною (спадання)</option>
+                        <option value="popularity">За популярністю</option>
                     </select>
                 </div>
-                
+
                 <div id="menuItemsList" class="menu-items-grid">
-                    <p class="loading-indicator">Загрузка меню...</p>
+                    <p class="loading-indicator">Завантаження меню...</p>
                 </div>
             </div>
         </div>
     </main>
 
     <footer>
-        <p>&copy; 2025 Суши-Мастер. Все права защищены.</p>
+        <p>&copy; 2025 Суші-Майстер. Всі права захищені.</p>
     </footer>
 
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
 </body>
+
 </html>

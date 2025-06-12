@@ -1,54 +1,57 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заказы - Суши-Мастер</title>
+    <title>Замовлення - Суші-Майстер</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
     <header>
         <nav>
-            <div class="logo">Суши-Мастер</div>
+            <div class="logo">Суші-Майстер</div>
             <ul class="menu" id="mainNav">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="orders.html">Заказы</a></li>
+                <li><a href="../index.html">Головна</a></li>
+                <li><a href="orders.html">Замовлення</a></li>
                 <li><a href="menu.html">Меню</a></li>
-                <li><a href="admin.html">Администрирование</a></li>
+                <li><a href="admin.html">Адміністрування</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
         <div class="orders-header">
-            <h1>Управление заказами</h1>
+            <h1>Управління замовленнями</h1>
             <div class="order-controls">
                 <button id="refreshOrdersBtn" class="secondary-btn">
-                    <span class="refresh-icon">↻</span> Обновить
+                    <span class="refresh-icon">↻</span> Оновити
                 </button>
-                <button id="createOrderBtn" class="primary-btn">+ Создать заказ</button>
+                <button id="createOrderBtn" class="primary-btn">+ Створити замовлення</button>
             </div>
         </div>
-        
+
         <div class="order-filters" id="orderFilters">
         </div>
-        
+
         <div class="orders-container">
             <div id="ordersLoadingIndicator" class="loading-indicator">
                 <div class="loading-spinner"></div>
-                <span>Загрузка заказов...</span>
+                <span>Завантаження замовлень...</span>
             </div>
             <div id="ordersList" class="orders-list">
-                <!-- Заказы будут добавлены через JS -->
+                <!-- Замовлення будуть додані через JS -->
             </div>
         </div>
     </main>
 
     <footer>
-        <p>&copy; 2025 Суши-Мастер. Все права защищены.</p>
+        <p>&copy; 2025 Суші-Майстер. Всі права захищені.</p>
     </footer>
 
     <script src="../js/api.js"></script>
     <script src="../js/orders.js" type="module"></script>
 </body>
+
 </html>

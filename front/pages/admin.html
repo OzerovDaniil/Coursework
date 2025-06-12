@@ -1,233 +1,235 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Администрирование - Суши-Мастер</title>
+    <title>Адміністрування - Суші-Майстер</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
     <header>
         <nav>
-            <div class="logo">Суши-Мастер</div>
+            <div class="logo">Суші-Майстер</div>
             <ul class="menu">
-                <li><a href="../index.html">Главная</a></li>
-                <li><a href="orders.html">Заказы</a></li>
+                <li><a href="../index.html">Головна</a></li>
+                <li><a href="orders.html">Замовлення</a></li>
                 <li><a href="menu.html">Меню</a></li>
-                <li><a href="admin.html">Администрирование</a></li>
+                <li><a href="admin.html">Адміністрування</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <h1>Администрирование системы</h1>
-        
+        <h1>Адміністрування системи</h1>
+
         <div class="admin-panel">
             <div class="admin-sidebar">
-                <h2>Разделы</h2>
+                <h2>Розділи</h2>
                 <ul class="admin-nav">
-                    <li class="active" data-section="employees">Сотрудники</li>
-                    <li data-section="inventory">Склад и ингредиенты</li>
-                    <li data-section="reports">Отчеты</li>
-                    <li data-section="settings">Настройки</li>
+                    <li class="active" data-section="employees">Співробітники</li>
+                    <li data-section="inventory">Склад та інгредієнти</li>
+                    <li data-section="reports">Звіти</li>
+                    <li data-section="settings">Налаштування</li>
                 </ul>
             </div>
-            
+
             <div class="admin-content">
                 <div id="employeesSection" class="admin-section active">
-                    <h2>Управление сотрудниками</h2>
-                    <button id="addEmployeeBtn" class="primary-btn">Добавить сотрудника</button>
-                    
+                    <h2>Управління співробітниками</h2>
+                    <button id="addEmployeeBtn" class="primary-btn">Додати співробітника</button>
+
                     <div class="search-filter">
-                        <input type="text" id="searchEmployees" placeholder="Поиск сотрудника...">
+                        <input type="text" id="searchEmployees" placeholder="Пошук співробітника...">
                         <select id="filterRole">
-                            <option value="all">Все роли</option>
-                            <option value="admin">Администраторы</option>
-                            <option value="chef">Повара</option>
-                            <option value="waiter">Официанты</option>
-                            <option value="cashier">Кассиры</option>
+                            <option value="all">Всі ролі</option>
+                            <option value="admin">Адміністратори</option>
+                            <option value="chef">Кухарі</option>
+                            <option value="waiter">Офіціанти</option>
+                            <option value="cashier">Касири</option>
                         </select>
                     </div>
-                    
+
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Имя</th>
-                                <th>Должность</th>
+                                <th>Ім'я</th>
+                                <th>Посада</th>
                                 <th>Контакт</th>
                                 <th>Статус</th>
-                                <th>Действия</th>
+                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="employeesList">
-                            <!-- Здесь будут отображаться сотрудники -->
+                            <!-- Тут будуть відображатися співробітники -->
                             <tr>
-                                <td colspan="6" class="loading-cell">Загрузка данных...</td>
+                                <td colspan="6" class="loading-cell">Завантаження даних...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Раздел склада и ингредиентов -->
+
+                <!-- Розділ складу та інгредієнтів -->
                 <div id="inventorySection" class="admin-section">
-                    <h2>Склад и ингредиенты</h2>
-                    <button id="addIngredientBtn" class="primary-btn">Добавить ингредиент</button>
-                    <button id="registerDeliveryBtn">Зарегистрировать поставку</button>
-                    
+                    <h2>Склад та інгредієнти</h2>
+                    <button id="addIngredientBtn" class="primary-btn">Додати інгредієнт</button>
+                    <button id="registerDeliveryBtn">Зареєструвати поставку</button>
+
                     <div class="inventory-stats">
                         <div class="stat-card">
-                            <h3>Всего ингредиентов</h3>
+                            <h3>Всього інгредієнтів</h3>
                             <p class="stat-value" id="totalIngredients">-</p>
                         </div>
                         <div class="stat-card warning">
-                            <h3>Заканчиваются</h3>
+                            <h3>Закінчуються</h3>
                             <p class="stat-value" id="lowStockCount">-</p>
                         </div>
                         <div class="stat-card danger">
-                            <h3>Отсутствуют</h3>
+                            <h3>Відсутні</h3>
                             <p class="stat-value" id="outOfStockCount">-</p>
                         </div>
                     </div>
-                    
+
                     <div class="search-filter">
-                        <input type="text" id="searchInventory" placeholder="Поиск по складу...">
+                        <input type="text" id="searchInventory" placeholder="Пошук по складу...">
                         <select id="filterStock">
-                            <option value="all">Все ингредиенты</option>
-                            <option value="low">Заканчиваются</option>
-                            <option value="out">Отсутствуют</option>
+                            <option value="all">Всі інгредієнти</option>
+                            <option value="low">Закінчуються</option>
+                            <option value="out">Відсутні</option>
                         </select>
                     </div>
-                    
+
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Название</th>
-                                <th>Категория</th>
-                                <th>Количество</th>
-                                <th>Ед. изм.</th>
+                                <th>Назва</th>
+                                <th>Категорія</th>
+                                <th>Кількість</th>
+                                <th>Од. вим.</th>
                                 <th>Статус</th>
-                                <th>Действия</th>
+                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="inventoryList">
-                            <!-- Здесь будут отображаться ингредиенты -->
+                            <!-- Тут будуть відображатися інгредієнти -->
                             <tr>
-                                <td colspan="7" class="loading-cell">Загрузка данных...</td>
+                                <td colspan="7" class="loading-cell">Завантаження даних...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Раздел отчетов -->
+
+                <!-- Розділ звітів -->
                 <div id="reportsSection" class="admin-section">
-                    <h2>Отчеты и аналитика</h2>
-                    
+                    <h2>Звіти та аналітика</h2>
+
                     <div class="report-filters">
                         <div class="date-range">
-                            <label for="startDate">С:</label>
+                            <label for="startDate">Від:</label>
                             <input type="date" id="startDate">
-                            <label for="endDate">По:</label>
+                            <label for="endDate">До:</label>
                             <input type="date" id="endDate">
                         </div>
-                        <button id="generateReportBtn" class="primary-btn">Сформировать отчет</button>
+                        <button id="generateReportBtn" class="primary-btn">Сформувати звіт</button>
                     </div>
-                    
+
                     <div class="report-types">
                         <div class="report-card active" data-report="sales">
-                            <h3>Продажи</h3>
-                            <p>Анализ продаж по периодам</p>
+                            <h3>Продажі</h3>
+                            <p>Аналіз продажів за періодами</p>
                         </div>
                         <div class="report-card" data-report="popular">
-                            <h3>Популярные блюда</h3>
-                            <p>Топ продаваемых позиций</p>
+                            <h3>Популярні страви</h3>
+                            <p>Топ продаваних позицій</p>
                         </div>
                         <div class="report-card" data-report="inventory">
-                            <h3>Расход ингредиентов</h3>
-                            <p>Анализ использования ингредиентов</p>
+                            <h3>Витрата інгредієнтів</h3>
+                            <p>Аналіз використання інгредієнтів</p>
                         </div>
                         <div class="report-card" data-report="profit">
-                            <h3>Выручка и прибыль</h3>
-                            <p>Финансовые показатели</p>
+                            <h3>Виручка та прибуток</h3>
+                            <p>Фінансові показники</p>
                         </div>
                     </div>
-                    
+
                     <div class="report-container">
                         <div id="reportChart" class="chart">
-                            <!-- Здесь будет отображаться график -->
-                            <p class="chart-placeholder">Выберите тип отчета и период</p>
+                            <!-- Тут буде відображатися графік -->
+                            <p class="chart-placeholder">Виберіть тип звіту та період</p>
                         </div>
-                        
+
                         <div id="reportTable" class="report-table">
-                            <!-- Здесь будет отображаться таблица с данными -->
+                            <!-- Тут буде відображатися таблиця з даними -->
                         </div>
                     </div>
                 </div>
-                
-                <!-- Раздел настроек -->
+
+                <!-- Розділ налаштувань -->
                 <div id="settingsSection" class="admin-section">
-                    <h2>Настройки системы</h2>
-                    
+                    <h2>Налаштування системи</h2>
+
                     <div class="settings-container">
                         <div class="settings-card">
-                            <h3>Основные настройки</h3>
+                            <h3>Основні налаштування</h3>
                             <form id="generalSettingsForm" class="settings-form">
                                 <div class="form-group">
-                                    <label for="restaurantName">Название заведения:</label>
-                                    <input type="text" id="restaurantName" name="restaurantName" value="Суши-Мастер">
+                                    <label for="restaurantName">Назва закладу:</label>
+                                    <input type="text" id="restaurantName" name="restaurantName" value="Суші-Майстер">
                                 </div>
                                 <div class="form-group">
-                                    <label for="contactPhone">Контактный телефон:</label>
-                                    <input type="tel" id="contactPhone" name="contactPhone" value="+7 (123) 456-78-90">
+                                    <label for="contactPhone">Контактний телефон:</label>
+                                    <input type="tel" id="contactPhone" name="contactPhone" value="+380(68)-XXX-XX-XX">
                                 </div>
                                 <div class="form-group">
-                                    <label for="workingHours">Часы работы:</label>
+                                    <label for="workingHours">Години роботи:</label>
                                     <input type="text" id="workingHours" name="workingHours" value="10:00 - 22:00">
                                 </div>
-                                <button type="submit" class="primary-btn">Сохранить</button>
+                                <button type="submit" class="primary-btn">Зберегти</button>
                             </form>
                         </div>
-                        
+
                         <div class="settings-card">
-                            <h3>Настройки системы</h3>
+                            <h3>Налаштування системи</h3>
                             <form id="systemSettingsForm" class="settings-form">
                                 <div class="form-group checkbox-group">
                                     <input type="checkbox" id="enableNotifications" name="enableNotifications" checked>
-                                    <label for="enableNotifications">Включить уведомления</label>
+                                    <label for="enableNotifications">Увімкнути сповіщення</label>
                                 </div>
                                 <div class="form-group checkbox-group">
                                     <input type="checkbox" id="autoBackup" name="autoBackup" checked>
-                                    <label for="autoBackup">Автоматическое резервное копирование</label>
+                                    <label for="autoBackup">Автоматичне резервне копіювання</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="backupFrequency">Частота копирования:</label>
+                                    <label for="backupFrequency">Частота копіювання:</label>
                                     <select id="backupFrequency" name="backupFrequency">
-                                        <option value="daily">Ежедневно</option>
-                                        <option value="weekly">Еженедельно</option>
-                                        <option value="monthly">Ежемесячно</option>
+                                        <option value="daily">Щоденно</option>
+                                        <option value="weekly">Щотижня</option>
+                                        <option value="monthly">Щомісяця</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="primary-btn">Сохранить</button>
+                                <button type="submit" class="primary-btn">Зберегти</button>
                             </form>
                         </div>
-                        
+
                         <div class="settings-card">
-                            <h3>Безопасность</h3>
+                            <h3>Безпека</h3>
                             <form id="securitySettingsForm" class="settings-form">
                                 <div class="form-group">
-                                    <label for="passwordExpiry">Срок действия пароля (дней):</label>
+                                    <label for="passwordExpiry">Термін дії пароля (днів):</label>
                                     <input type="number" id="passwordExpiry" name="passwordExpiry" value="90">
                                 </div>
                                 <div class="form-group checkbox-group">
                                     <input type="checkbox" id="twoFactorAuth" name="twoFactorAuth">
-                                    <label for="twoFactorAuth">Двухфакторная аутентификация</label>
+                                    <label for="twoFactorAuth">Двофакторна автентифікація</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="sessionTimeout">Таймаут сессии (минуты):</label>
+                                    <label for="sessionTimeout">Таймаут сесії (хвилини):</label>
                                     <input type="number" id="sessionTimeout" name="sessionTimeout" value="30">
                                 </div>
-                                <button type="submit" class="primary-btn">Сохранить</button>
+                                <button type="submit" class="primary-btn">Зберегти</button>
                             </form>
                         </div>
                     </div>
@@ -237,10 +239,11 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Суши-Мастер. Все права защищены.</p>
+        <p>&copy; 2025 Суші-Майстер. Всі права захищені.</p>
     </footer>
 
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
 </body>
+
 </html>

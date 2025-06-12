@@ -22,8 +22,8 @@ class OrdersManager {
             window.location.href = '../index.html';
             return;
         }
-        document.getElementById('currentUserName').textContent = 
-            localStorage.getItem('userName') || 'Администратор';
+        document.getElementById('currentUserName').textContent =
+            localStorage.getItem('userName') || 'Адміністратор';
     }
 
     setupEventListeners() {
@@ -32,12 +32,12 @@ class OrdersManager {
             window.location.href = '../index.html';
         });
 
-        // Обновление списка заказов
+        // Оновлення списку замовлень
         document.getElementById('refreshOrdersBtn').addEventListener('click', () => {
             this.loadOrders();
         });
 
-        // Создание нового заказа
+        // Створення нового замовлення
         document.getElementById('createOrderBtn').addEventListener('click', () => {
             window.location.href = 'create-order.html';
         });
@@ -51,8 +51,8 @@ class OrdersManager {
             this.renderFilters();
             this.applyFilters();
         } catch (error) {
-            console.error('Ошибка загрузки заказов:', error);
-            this.showError('Не удалось загрузить заказы');
+            console.error('Помилка завантаження замовлень:', error);
+            this.showError('Не вдалося завантажити замовлення');
         } finally {
             this.showLoading(false);
         }
@@ -63,27 +63,27 @@ class OrdersManager {
         filtersContainer.innerHTML = `
             <div class="filter-group">
                 <select id="statusFilter" class="filter-select">
-                    <option value="all">Все статусы</option>
-                    <option value="new">Новые</option>
-                    <option value="preparing">В процессе</option>
-                    <option value="ready">Готовы</option>
-                    <option value="delivered">Завершённые</option>
+                    <option value="all">Всі статуси</option>
+                    <option value="new">Нові</option>
+                    <option value="preparing">В процесі</option>
+                    <option value="ready">Готові</option>
+                    <option value="delivered">Завершені</option>
                 </select>
             </div>
             <div class="filter-group">
                 <select id="dateFilter" class="filter-select">
-                    <option value="today">Сегодня</option>
-                    <option value="week">Неделя</option>
-                    <option value="month">Месяц</option>
-                    <option value="all">Все время</option>
+                    <option value="today">Сьогодні</option>
+                    <option value="week">Тиждень</option>
+                    <option value="month">Місяць</option>
+                    <option value="all">Весь час</option>
                 </select>
             </div>
             <div class="filter-group">
-                <input type="text" id="searchFilter" placeholder="Поиск по номеру или клиенту" class="search-input">
+                <input type="text" id="searchFilter" placeholder="Пошук за номером або клієнтом" class="search-input">
             </div>
         `;
 
-        // Обработчики фильтров
+        // Обробники фільтрів
         document.getElementById('statusFilter').addEventListener('change', (e) => {
             this.currentFilters.status = e.target.value;
             this.applyFilters();
@@ -102,13 +102,13 @@ class OrdersManager {
 
     applyFilters() {
         let filtered = [...this.allOrders];
-        
-        // Фильтрация по статусу
+
+        // Фільтрація за статусом
         if (this.currentFilters.status !== 'all') {
             filtered = filtered.filter(order => order.status === this.currentFilters.status);
         }
-        
-        // Фильтрация по дате
+
+        // Фільтрація за датою
         const now = new Date();
         switch (this.currentFilters.date) {
             case 'today':
@@ -129,9 +129,9 @@ class OrdersManager {
                 break;
         }
 
-        // Фильтрация по поиску
+        // Фільтрація за пошуком
         if (this.currentFilters.search) {
-            filtered = filtered.filter(order => 
+            filtered = filtered.filter(order =>
                 order.id.toString().includes(this.currentFilters.search) ||
                 (order.clientPhone && order.clientPhone.toLowerCase().includes(this.currentFilters.search))
             );
@@ -142,16 +142,16 @@ class OrdersManager {
 
     displayOrders(orders) {
         const container = document.getElementById('ordersList');
-        
+
         if (orders.length === 0) {
-            container.innerHTML = '<p class="no-orders">Нет заказов по выбранным критериям</p>';
+            container.innerHTML = '<p class="no-orders">Немає замовлень за обраними критеріями</p>';
             return;
         }
 
         container.innerHTML = orders.map(order => `
             <div class="order-item" data-order-id="${order.id}">
                 <div class="order-header">
-                    <span class="order-id">Заказ #${order.id}</span>
+                    <span class="order-id">Замовлення #${order.id}</span>
                     <span class="order-date">${this.formatDate(order.createdAt)}</span>
                     <span class="order-status status-${order.status}">
                         ${this.translateStatus(order.status)}
@@ -159,15 +159,15 @@ class OrdersManager {
                 </div>
                 <div class="order-body">
                     <div class="order-client">
-                        <span class="client-phone">${order.clientPhone || 'Нет данных'}</span>
+                        <span class="client-phone">${order.clientPhone || 'Немає даних'}</span>
                         ${order.deliveryAddress ? `<span class="delivery-address">${order.deliveryAddress}</span>` : ''}
                     </div>
                     <div class="order-items">
                         ${this.formatItems(order.items)}
                     </div>
                     <div class="order-footer">
-                        <span class="order-total">Итого: ${order.total} ₽</span>
-                        ${order.comment ? `<div class="order-comment">Примечание: ${order.comment}</div>` : ''}
+                        <span class="order-total">Разом: ${order.total} ₴</span>
+                        ${order.comment ? `<div class="order-comment">Примітка: ${order.comment}</div>` : ''}
                     </div>
                 </div>
                 <div class="order-actions">
@@ -180,22 +180,22 @@ class OrdersManager {
     }
 
     formatDate(dateString) {
-        const options = { 
-            day: 'numeric', 
-            month: 'numeric', 
+        const options = {
+            day: 'numeric',
+            month: 'numeric',
             year: 'numeric',
-            hour: '2-digit', 
+            hour: '2-digit',
             minute: '2-digit'
         };
-        return new Date(dateString).toLocaleString('ru-RU', options);
+        return new Date(dateString).toLocaleString('uk-UA', options);
     }
 
     translateStatus(status) {
         const statusMap = {
-            'new': 'Новый',
-            'preparing': 'Готовится',
-            'ready': 'Готов',
-            'delivered': 'Доставлен'
+            'new': 'Новий',
+            'preparing': 'Готується',
+            'ready': 'Готовий',
+            'delivered': 'Доставлений'
         };
         return statusMap[status] || status;
     }
@@ -204,8 +204,8 @@ class OrdersManager {
         return items.map(item => `
             <div class="order-item-row">
                 <span class="item-name">${item.name}</span>
-                <span class="item-quantity">${item.quantity} × ${item.price} ₽</span>
-                <span class="item-total">${item.quantity * item.price} ₽</span>
+                <span class="item-quantity">${item.quantity} × ${item.price} ₴</span>
+                <span class="item-total">${item.quantity * item.price} ₴</span>
             </div>
         `).join('');
     }
@@ -213,58 +213,66 @@ class OrdersManager {
     getActionButtons(order) {
         const buttons = [];
         const userRole = localStorage.getItem('userRole');
-        
-        // Кнопки изменения статуса
+
+        // Кнопки зміни статусу
         if (['admin', 'chef'].includes(userRole)) {
             if (order.status === 'new') {
                 buttons.push(`
                     <button class="action-btn status-btn" data-status="preparing">
-                        Начать готовить
+                        Почати готувати
                     </button>
                 `);
             } else if (order.status === 'preparing') {
                 buttons.push(`
                     <button class="action-btn status-btn" data-status="ready">
-                        Готов к выдаче
+                        Готовий до видачі
                     </button>
                 `);
             }
         }
-        
+
         if (['admin', 'waiter'].includes(userRole)) {
             if (order.status === 'ready') {
                 buttons.push(`
                     <button class="action-btn status-btn" data-status="delivered">
-                        Подтвердить доставку
+                        Підтвердити доставку
                     </button>
                 `);
             }
         }
-        
-        // Общие кнопки
+
+        // Загальні кнопки
         buttons.push(`
             <button class="action-btn details-btn">
-                Подробности
+                Деталі
             </button>
         `);
-        
+
         return buttons.join('');
     }
 
     setupActionHandlers() {
-        // Обработчики кнопок статуса
-        document.querySelectorAll('.status-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const orderId = e.target.closest('.order-item').dataset.orderId;
+        // Обробники кнопок зміни статусу
+        document.querySelectorAll('.status-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const orderItem = e.target.closest('.order-item');
+                const orderId = orderItem.dataset.orderId;
                 const newStatus = e.target.dataset.status;
-                await this.updateOrderStatus(orderId, newStatus);
+
+                try {
+                    await this.updateOrderStatus(orderId, newStatus);
+                    await this.loadOrders();
+                } catch (error) {
+                    this.showError('Помилка оновлення статусу замовлення');
+                }
             });
         });
 
-        // Обработчики кнопок подробностей
-        document.querySelectorAll('.details-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const orderId = e.target.closest('.order-item').dataset.orderId;
+        // Обробники кнопок деталей
+        document.querySelectorAll('.details-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const orderItem = e.target.closest('.order-item');
+                const orderId = orderItem.dataset.orderId;
                 this.showOrderDetails(orderId);
             });
         });
@@ -273,102 +281,70 @@ class OrdersManager {
     async updateOrderStatus(orderId, newStatus) {
         try {
             await orderService.updateStatus(orderId, newStatus);
-            await this.loadOrders();
         } catch (error) {
-            console.error('Ошибка обновления статуса:', error);
-            alert('Не удалось обновить статус заказа');
+            throw new Error('Помилка оновлення статусу замовлення');
         }
     }
 
     showOrderDetails(orderId) {
-        const order = this.allOrders.find(o => o.id == orderId);
-        if (order) {
-            const detailsHtml = `
-                <div class="order-details-modal">
-                    <h3>Детали заказа #${order.id}</h3>
-                    <div class="detail-row">
-                        <span class="detail-label">Дата:</span>
-                        <span>${this.formatDate(order.createdAt)}</span>
+        const order = this.allOrders.find(o => o.id === parseInt(orderId));
+        if (!order) return;
+
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h2>Деталі замовлення #${order.id}</h2>
+                <div class="order-details">
+                    <div class="detail-group">
+                        <h3>Інформація про клієнта</h3>
+                        <p>Телефон: ${order.clientPhone || 'Немає даних'}</p>
+                        ${order.deliveryAddress ? `<p>Адреса доставки: ${order.deliveryAddress}</p>` : ''}
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Статус:</span>
-                        <span class="order-status status-${order.status}">
-                            ${this.translateStatus(order.status)}
-                        </span>
+                    <div class="detail-group">
+                        <h3>Замовлені страви</h3>
+                        ${this.formatItemsDetailed(order.items)}
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Клиент:</span>
-                        <span>${order.clientPhone || 'Не указан'}</span>
+                    <div class="detail-group">
+                        <h3>Додаткова інформація</h3>
+                        <p>Статус: ${this.translateStatus(order.status)}</p>
+                        <p>Дата створення: ${this.formatDate(order.createdAt)}</p>
+                        ${order.comment ? `<p>Примітка: ${order.comment}</p>` : ''}
+                        <p>Загальна сума: ${order.total} ₴</p>
                     </div>
-                    ${order.deliveryAddress ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Адрес:</span>
-                        <span>${order.deliveryAddress}</span>
-                    </div>` : ''}
-                    <div class="detail-row">
-                        <span class="detail-label">Состав заказа:</span>
-                        <div class="order-items-details">
-                            ${this.formatItemsDetailed(order.items)}
-                        </div>
-                    </div>
-                    <div class="detail-row total-row">
-                        <span class="detail-label">Итого:</span>
-                        <span class="order-total">${order.total} ₽</span>
-                    </div>
-                    ${order.comment ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Примечание:</span>
-                        <span>${order.comment}</span>
-                    </div>` : ''}
                 </div>
-            `;
-            
-            // Здесь можно реализовать модальное окно или другой способ показа деталей
-            console.log(detailsHtml); // Для демонстрации
-            alert(`Детали заказа #${order.id}\nКлиент: ${order.clientPhone}\nСумма: ${order.total} ₽`);
-        }
+                <button class="close-modal">Закрити</button>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
     }
 
     formatItemsDetailed(items) {
         return items.map(item => `
-            <div class="order-item-detailed">
+            <div class="detail-item">
                 <span class="item-name">${item.name}</span>
-                <span class="item-quantity">${item.quantity} × ${item.price} ₽</span>
-                <span class="item-total">${item.quantity * item.price} ₽</span>
+                <span class="item-quantity">Кількість: ${item.quantity}</span>
+                <span class="item-price">Ціна: ${item.price} ₴</span>
+                <span class="item-total">Сума: ${item.quantity * item.price} ₴</span>
             </div>
         `).join('');
     }
 
     showLoading(show) {
         const loader = document.getElementById('ordersLoadingIndicator');
-        const list = document.getElementById('ordersList');
-        
-        if (show) {
-            loader.style.display = 'flex';
-            list.style.opacity = '0.5';
-        } else {
-            loader.style.display = 'none';
-            list.style.opacity = '1';
+        if (loader) {
+            loader.style.display = show ? 'flex' : 'none';
         }
     }
 
     showError(message) {
-        const container = document.getElementById('ordersList');
-        container.innerHTML = `
-            <div class="error-message">
-                <span class="error-icon">⚠</span>
-                <span>${message}</span>
-                <button id="retryBtn" class="secondary-btn">Повторить</button>
-            </div>
-        `;
-        
-        document.getElementById('retryBtn').addEventListener('click', () => {
-            this.loadOrders();
-        });
+        alert(message);
     }
 }
 
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    new OrdersManager();
-});
+// Ініціалізація менеджера замовлень
+new OrdersManager();

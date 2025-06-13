@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Перевіряємо, чи авторизований користувач
     const authToken = localStorage.getItem('authToken');
-    if (authToken) {
-        // Якщо токен є, перенаправляємо на сторінку замовлень
-        window.location.href = 'pages/orders.html';
-    }
+    // if (authToken) {
+    //     // Якщо токен є, перенаправляємо на сторінку замовлень
+    //     window.location.href = 'pages/orders.html';
+    // }
 
     // Обробляємо форму входу
     const loginForm = document.getElementById('loginForm');

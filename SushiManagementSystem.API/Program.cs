@@ -52,6 +52,7 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IRecipeItemService, RecipeItemService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 // Налаштування AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);

@@ -8,6 +8,8 @@ using SushiManagementSystem.API.Filters;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
+using SushiManagementSystem.Infrastructure.Data;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -123,5 +125,12 @@ app.UseAuthentication(); // Додаємо автентифікацію
 app.UseAuthorization(); // Додаємо авторизацію
 app.UseMiddleware<ExceptionMiddleware>(); // Middleware для обробки помилок
 app.MapControllers(); // Підключаємо контролери
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    DbSeeder.Seed(context);
+}
 
 app.Run();

@@ -14,6 +14,7 @@ namespace SushiManagementSystem.Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
         public DbSet<RecipeItem> RecipeItems { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
 

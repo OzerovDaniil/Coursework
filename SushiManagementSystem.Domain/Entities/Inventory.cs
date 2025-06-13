@@ -14,6 +14,6 @@ namespace SushiManagementSystem.Domain.Entities
         public required string ItemName { get; set; }
         public required string Unit { get; set; }
 
-        public required Ingredient Ingredient { get; set; }
+        public Ingredient Ingredient { get; set; }
     }
 }

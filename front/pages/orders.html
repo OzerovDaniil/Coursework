@@ -4,53 +4,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Замовлення - Суші-Майстер</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <title>Суші-Майстер - Замовлення</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="logo">Суші-Майстер</div>
-            <ul class="menu" id="mainNav">
-                <li><a href="../index.html">Головна</a></li>
-                <li><a href="menu.html">Меню</a></li>
-                <li><a href="admin.html">Адміністрування</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div id="header-placeholder"></div>
 
-    <main>
-        <div class="orders-header">
-            <h1>Управління замовленнями</h1>
-            <div class="order-controls">
-                <button id="refreshOrdersBtn" class="secondary-btn">
-                    <span class="refresh-icon">↻</span> Оновити
-                </button>
-                <button id="createOrderBtn" class="primary-btn">+ Створити замовлення</button>
-            </div>
-        </div>
+    <main class="orders-page">
+        <section class="orders-hero">
+            <h1>Мої замовлення</h1>
+            <p class="subtitle">Переглядайте та керуйте своїми замовленнями</p>
+        </section>
 
-        <div class="order-filters" id="orderFilters">
-        </div>
+        <section class="orders-content">
+            <div class="orders-filters">
+                <button class="filter-btn active" data-status="all">Всі</button>
+                <button class="filter-btn" data-status="pending">В обробці</button>
+                <button class="filter-btn" data-status="preparing">Готуються</button>
+                <button class="filter-btn" data-status="ready">Готові</button>
+                <button class="filter-btn" data-status="delivered">Доставлені</button>
+                <button class="filter-btn" data-status="cancelled">Скасовані</button>
+            </div>
 
-        <div class="orders-container">
-            <div id="ordersLoadingIndicator" class="loading-indicator">
-                <div class="loading-spinner"></div>
-                <span>Завантаження замовлень...</span>
+            <div class="orders-grid" id="ordersGrid">
+                <!-- Тут будуть замовлення -->
             </div>
-            <div id="ordersList" class="orders-list">
-                <!-- Замовлення будуть додані через JS -->
-            </div>
-        </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 Суші-Майстер. Всі права захищені.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>📞 +380 44 123 4567</p>
+                <p>✉️ info@sushi-master.ua</p>
+                <p>📍 вул. Сушиста, 1, м. Київ</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Слідкуйте за нами</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Telegram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Суші-Майстер. Всі права захищені.</p>
+        </div>
     </footer>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/orders.js" type="module"></script>
+    <script type="module">
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Функція для відображення замовлень
+        async function displayOrders() {
+            try {
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    window.location.href = '/index.html';
+                    return;
+                }
+
+                const orders = await api.getOrders();
+                const ordersGrid = document.getElementById('ordersGrid');
+                ordersGrid.innerHTML = '';
+
+                if (orders.length === 0) {
+                    ordersGrid.innerHTML = `
+                        <div class="no-orders">
+                            <p>У вас ще немає замовлень</p>
+                            <a href="/pages/menu.html" class="btn btn-primary">Перейти до меню</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                orders.forEach(order => {
+                    const orderElement = document.createElement('div');
+                    orderElement.className = `order-card ${order.status}`;
+                    orderElement.innerHTML = `
+                        <div class="order-header">
+                            <h3>Замовлення #${order.id}</h3>
+                            <span class="order-date">${new Date(order.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <span class="item-name">${item.name}</span>
+                                    <span class="item-quantity">x${item.quantity}</span>
+                                    <span class="item-price">${item.price} ₴</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="order-footer">
+                            <div class="order-total">
+                                <span>Загальна сума:</span>
+                                <span class="total-price">${order.totalAmount} ₴</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="status-badge ${order.status}">${getStatusText(order.status)}</span>
+                            </div>
+                            ${order.status === 'pending' ? `
+                                <button class="btn btn-secondary cancel-order" data-id="${order.id}">
+                                    Скасувати
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    ordersGrid.appendChild(orderElement);
+                });
+
+                // Додаємо обробники подій для кнопок фільтрації
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+
+                        const status = button.dataset.status;
+                        const orders = document.querySelectorAll('.order-card');
+
+                        orders.forEach(order => {
+                            if (status === 'all' || order.classList.contains(status)) {
+                                order.style.display = 'block';
+                            } else {
+                                order.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+
+                // Додаємо обробники подій для кнопок скасування
+                const cancelButtons = document.querySelectorAll('.cancel-order');
+                cancelButtons.forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const orderId = button.dataset.id;
+                        if (confirm('Ви впевнені, що хочете скасувати це замовлення?')) {
+                            try {
+                                await api.updateOrderStatus(orderId, 'cancelled');
+                                displayOrders(); // Оновлюємо список замовлень
+                            } catch (error) {
+                                console.error('Помилка скасування замовлення:', error);
+                                alert('Виникла помилка при скасуванні замовлення');
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Помилка завантаження замовлень:', error);
+                alert('Виникла помилка при завантаженні замовлень');
+            }
+        }
+
+        // Функція для отримання тексту статусу
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'В обробці',
+                'preparing': 'Готуються',
+                'ready': 'Готові',
+                'delivered': 'Доставлені',
+                'cancelled': 'Скасовані'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Завантажуємо замовлення при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', displayOrders);
+    </script>
 </body>
 
 </html>

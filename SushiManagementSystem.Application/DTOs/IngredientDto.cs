@@ -14,12 +14,13 @@ namespace SushiManagementSystem.Application.DTOs
         [StringLength(100, ErrorMessage = "Назва не може перевищувати 100 символів")]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Кількість обов'язкова")]
-        [Range(0, double.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
-        public required decimal Quantity { get; set; }
+        public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Одиниця виміру обов'язкова")]
-        [StringLength(20, ErrorMessage = "Одиниця виміру не може перевищувати 20 символів")]
-        public required string Unit { get; set; }
+        [Required(ErrorMessage = "Ціна за одиницю обов'язкова")]
+        public decimal PricePerUnit { get; set; }
+
+        public string? Unit { get; set; }
+        public bool IsAvailable { get; set; } = true;
+        public string? Category { get; set; }
     }
 }

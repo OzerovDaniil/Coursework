@@ -1,0 +1,90 @@
+<header>
+    <nav class="nav-container">
+        <a href="/front/" class="logo">
+            <img src="/front/images/logo.png" alt="Суші-Майстер">
+            <h1>Суші-Майстер</h1>
+        </a>
+
+        <button class="menu-toggle" aria-label="Меню">
+            <span class="menu-icon">☰</span>
+        </button>
+
+        <ul class="nav-menu">
+            <li class="menu-item">
+                <a href="/front/index.html">Головна</a>
+            </li>
+            <li class="menu-item">
+                <a href="/front/pages/menu.html">Меню</a>
+            </li>
+            <li class="menu-item">
+                <a href="/front/pages/about.html">Про нас</a>
+            </li>
+            <li class="menu-item">
+                <a href="/front/pages/contacts.html">Контакти</a>
+            </li>
+            <li class="menu-item admin-link" style="display: none;">
+                <a href="/front/pages/admin/dashboard.html">Адмін-панель</a>
+            </li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-primary" id="loginBtn">Увійти</button>
+            <button class="btn btn-secondary" id="registerBtn">Реєстрація</button>
+        </div>
+
+        <div class="user-info" style="display: none;">
+            <span class="username"></span>
+            <button class="logout-btn">Вийти</button>
+        </div>
+    </nav>
+</header>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Вхід</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginUsername">Логін:</label>
+                <input type="text" id="loginUsername" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Пароль:</label>
+                <input type="password" id="loginPassword" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Увійти</button>
+        </form>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal" id="registerModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Реєстрація</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerUsername">Логін:</label>
+                <input type="text" id="registerUsername" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email:</label>
+                <input type="email" id="registerEmail" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPhone">Номер телефону:</label>
+                <input type="tel" id="registerPhone" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Пароль:</label>
+                <input type="password" id="registerPassword" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="registerConfirmPassword">Підтвердження паролю:</label>
+                <input type="password" id="registerConfirmPassword" name="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Зареєструватися</button>
+        </form>
+    </div>
+</div>

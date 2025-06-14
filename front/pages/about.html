@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Про нас - Суші-Майстер</title>
+    <link rel="stylesheet" href="/front/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="/front/images/favicon.ico">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="about-page">
+        <section class="about-hero">
+            <h1>Про Суші-Майстер</h1>
+            <p class="subtitle">Ваш надійний партнер у світі японської кухні з 2015 року</p>
+        </section>
+
+        <section class="about-content">
+            <div class="about-section">
+                <h2>Наша історія</h2>
+                <p>Ресторан "Суші-Майстер" був заснований у 2015 році групою ентузіастів, які захоплюються японською
+                    кухнею. За ці роки ми виросли з невеликого кафе в один з найпопулярніших ресторанів суші в місті.
+                </p>
+                <p>Наша місія - дарувати гостям незабутні смакові враження, використовуючи тільки найсвіжіші інгредієнти
+                    та традиційні технології приготування.</p>
+            </div>
+
+            <div class="about-section">
+                <h2>Наші переваги</h2>
+                <div class="advantages-grid">
+                    <div class="advantage-card">
+                        <h3>Свіжі інгредієнти</h3>
+                        <p>Щодня ми отримуємо свіжі морепродукти та овочі від перевірених постачальників</p>
+                    </div>
+                    <div class="advantage-card">
+                        <h3>Досвідчені шефи</h3>
+                        <p>Наші кухарі мають багаторічний досвід у приготуванні японської кухні</p>
+                    </div>
+                    <div class="advantage-card">
+                        <h3>Швидка доставка</h3>
+                        <p>Доставляємо замовлення протягом 30-60 хвилин у межах міста</p>
+                    </div>
+                    <div class="advantage-card">
+                        <h3>Гарантія якості</h3>
+                        <p>Ми гарантуємо високу якість всіх наших страв та послуг</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <h2>Наша команда</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="/images/chef1.jpg" alt="Шеф-кухар" class="team-photo">
+                        <h3>Олександр Петренко</h3>
+                        <p>Шеф-кухар</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="/images/chef2.jpg" alt="Сушист" class="team-photo">
+                        <h3>Марія Коваленко</h3>
+                        <p>Головний сушист</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="/images/manager.jpg" alt="Менеджер" class="team-photo">
+                        <h3>Андрій Сидоренко</h3>
+                        <p>Менеджер ресторану</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>📞 +380 44 123 4567</p>
+                <p>✉️ info@sushi-master.ua</p>
+                <p>📍 вул. Сушиста, 1, м. Київ</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Слідкуйте за нами</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Telegram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Суші-Майстер. Всі права захищені.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+    </script>
+</body>
+
+</html>

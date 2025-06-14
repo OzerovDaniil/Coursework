@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управління меню - Адмін-панель</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="admin-page">
+        <div class="admin-hero">
+            <h1>Управління меню</h1>
+            <p class="subtitle">Додавайте, редагуйте та видаляйте позиції меню</p>
+        </div>
+
+        <div class="admin-actions">
+            <button class="btn btn-primary" onclick="openAddItemModal()">Додати позицію</button>
+        </div>
+
+        <div class="admin-grid" id="menu-items-grid">
+            <!-- Menu items will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Add/Edit Item Modal -->
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeItemModal()">&times;</span>
+            <h2 id="modalTitle">Додати позицію</h2>
+            <form id="itemForm" onsubmit="handleItemSubmit(event)">
+                <input type="hidden" id="itemId">
+                <div class="form-group">
+                    <label for="itemName">Назва:</label>
+                    <input type="text" id="itemName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription">Опис:</label>
+                    <textarea id="itemDescription" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">Ціна:</label>
+                    <input type="number" id="itemPrice" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemCategory">Категорія:</label>
+                    <select id="itemCategory" name="category" required>
+                        <option value="rolls">Роли</option>
+                        <option value="sushi">Суші</option>
+                        <option value="sets">Сети</option>
+                        <option value="drinks">Напої</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemImage">URL зображення:</label>
+                    <input type="url" id="itemImage" name="imageUrl" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemAvailable">Доступність:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="itemAvailable" name="isAvailable" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Зберегти</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Адреса: вул. Суши, 1</p>
+                <p>Телефон: +380 12 345 6789</p>
+                <p>Email: info@sushi-master.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Соціальні мережі</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { authService, menuService } from '../../js/api.js';
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Check access rights
+        if (!authService.isAuthenticated() || !authService.hasRole('admin')) {
+            window.location.href = '../../index.html';
+        }
+
+        // Load menu items
+        async function loadMenuItems() {
+            try {
+                const items = await menuService.getMenuItems();
+                const grid = document.getElementById('menu-items-grid');
+                grid.innerHTML = items.map(item => `
+                    <div class="admin-card">
+                        <img src="${item.imageUrl}" alt="${item.name}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 1rem;">
+                        <h3>${item.name}</h3>
+                        <p>${item.description}</p>
+                        <p class="price">${item.price} грн</p>
+                        <p>Категорія: ${getCategoryName(item.category)}</p>
+                        <p>Статус: ${item.isAvailable ? 'Доступно' : 'Недоступно'}</p>
+                        <div class="admin-actions">
+                            <button class="btn btn-secondary" onclick="editItem(${item.id})">Редагувати</button>
+                            <button class="btn btn-danger" onclick="deleteItem(${item.id})">Видалити</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading menu items:', error);
+                showMessage('Помилка завантаження меню', 'error');
+            }
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'rolls': 'Роли',
+                'sushi': 'Суші',
+                'sets': 'Сети',
+                'drinks': 'Напої'
+            };
+            return categories[category] || category;
+        }
+
+        // Modal functions
+        window.openAddItemModal = function () {
+            document.getElementById('modalTitle').textContent = 'Додати позицію';
+            document.getElementById('itemForm').reset();
+            document.getElementById('itemId').value = '';
+            document.getElementById('itemModal').classList.add('show');
+        };
+
+        window.closeItemModal = function () {
+            document.getElementById('itemModal').classList.remove('show');
+        };
+
+        window.editItem = async function (itemId) {
+            try {
+                const item = await menuService.getMenuItem(itemId);
+                document.getElementById('modalTitle').textContent = 'Редагувати позицію';
+                document.getElementById('itemId').value = item.id;
+                document.getElementById('itemName').value = item.name;
+                document.getElementById('itemDescription').value = item.description;
+                document.getElementById('itemPrice').value = item.price;
+                document.getElementById('itemCategory').value = item.category;
+                document.getElementById('itemImage').value = item.imageUrl;
+                document.getElementById('itemAvailable').checked = item.isAvailable;
+                document.getElementById('itemModal').classList.add('show');
+            } catch (error) {
+                console.error('Error loading item:', error);
+                showMessage('Помилка завантаження позиції', 'error');
+            }
+        };
+
+        window.deleteItem = async function (itemId) {
+            if (confirm('Ви впевнені, що хочете видалити цю позицію?')) {
+                try {
+                    await menuService.deleteMenuItem(itemId);
+                    showMessage('Позицію видалено', 'success');
+                    loadMenuItems();
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    showMessage('Помилка видалення позиції', 'error');
+                }
+            }
+        };
+
+        window.handleItemSubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const itemData = {
+                id: document.getElementById('itemId').value || null,
+                name: formData.get('name'),
+                description: formData.get('description'),
+                price: parseFloat(formData.get('price')),
+                category: formData.get('category'),
+                imageUrl: formData.get('imageUrl'),
+                isAvailable: formData.get('isAvailable') === 'on'
+            };
+
+            try {
+                if (itemData.id) {
+                    await menuService.updateMenuItem(itemData.id, itemData);
+                    showMessage('Позицію оновлено', 'success');
+                } else {
+                    await menuService.createMenuItem(itemData);
+                    showMessage('Позицію додано', 'success');
+                }
+                closeItemModal();
+                loadMenuItems();
+            } catch (error) {
+                console.error('Error saving item:', error);
+                showMessage('Помилка збереження позиції', 'error');
+            }
+        };
+
+        function showMessage(message, type) {
+            const modal = document.createElement('div');
+            modal.className = `modal show ${type}`;
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <p>${message}</p>
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Load menu items on page load
+        loadMenuItems();
+    </script>
+</body>
+
+</html> 

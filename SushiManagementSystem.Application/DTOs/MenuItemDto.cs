@@ -21,6 +21,9 @@ namespace SushiManagementSystem.Application.DTOs
         [Required(ErrorMessage = "Опис обов'язковий")]
         public required string Description { get; set; }
 
+        [Required(ErrorMessage = "Зображення обов'язкове")]
+        public required string ImageUrl { get; set; }
+
         [Required(ErrorMessage = "Категорія обов'язкова")]
         public required string Category { get; set; }
 

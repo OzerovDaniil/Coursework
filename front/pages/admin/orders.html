@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управління замовленнями - Адмін-панель</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="admin-page">
+        <div class="admin-hero">
+            <h1>Управління замовленнями</h1>
+            <p class="subtitle">Переглядайте та керуйте замовленнями</p>
+        </div>
+
+        <div class="admin-filters">
+            <button class="btn btn-secondary active" data-status="all">Всі</button>
+            <button class="btn btn-secondary" data-status="pending">Очікують</button>
+            <button class="btn btn-secondary" data-status="preparing">Готуються</button>
+            <button class="btn btn-secondary" data-status="ready">Готові</button>
+            <button class="btn btn-secondary" data-status="delivered">Доставлені</button>
+            <button class="btn btn-secondary" data-status="cancelled">Скасовані</button>
+        </div>
+
+        <div class="admin-grid" id="orders-grid">
+            <!-- Orders will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderModal()">&times;</span>
+            <h2>Деталі замовлення</h2>
+            <div id="orderDetails">
+                <!-- Order details will be loaded here -->
+            </div>
+            <div class="order-actions">
+                <select id="orderStatus" onchange="updateOrderStatus()">
+                    <option value="pending">Очікує</option>
+                    <option value="preparing">Готується</option>
+                    <option value="ready">Готове</option>
+                    <option value="delivered">Доставлено</option>
+                    <option value="cancelled">Скасовано</option>
+                </select>
+                <button class="btn btn-primary" onclick="saveOrderStatus()">Зберегти статус</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Адреса: вул. Суши, 1</p>
+                <p>Телефон: +380 12 345 6789</p>
+                <p>Email: info@sushi-master.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Соціальні мережі</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { authService, orderService } from '../../js/api.js';
+
+        // Load header
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Check access rights
+        if (!authService.isAuthenticated() || !authService.hasRole('admin')) {
+            window.location.href = '../../index.html';
+        }
+
+        let currentOrderId = null;
+        let currentStatus = 'all';
+
+        // Load orders
+        async function loadOrders(status = 'all') {
+            try {
+                const orders = await orderService.getOrders();
+                const filteredOrders = status === 'all'
+                    ? orders
+                    : orders.filter(order => order.status === status);
+
+                const grid = document.getElementById('orders-grid');
+                grid.innerHTML = filteredOrders.map(order => `
+                    <div class="admin-card">
+                        <div class="order-header">
+                            <h3>Замовлення #${order.id}</h3>
+                            <span class="status-badge ${order.status}">${getStatusName(order.status)}</span>
+                        </div>
+                        <p>Клієнт: ${order.customerName}</p>
+                        <p>Телефон: ${order.customerPhone}</p>
+                        <p>Адреса: ${order.deliveryAddress}</p>
+                        <p>Сума: ${order.totalAmount} грн</p>
+                        <p>Дата: ${new Date(order.createdAt).toLocaleString()}</p>
+                        <div class="admin-actions">
+                            <button class="btn btn-primary" onclick="viewOrder(${order.id})">Деталі</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Update active filter button
+                document.querySelectorAll('.admin-filters button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.status === status);
+                });
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                showMessage('Помилка завантаження замовлень', 'error');
+            }
+        }
+
+        function getStatusName(status) {
+            const statuses = {
+                'pending': 'Очікує',
+                'preparing': 'Готується',
+                'ready': 'Готове',
+                'delivered': 'Доставлено',
+                'cancelled': 'Скасовано'
+            };
+            return statuses[status] || status;
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.admin-filters button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentStatus = btn.dataset.status;
+                loadOrders(currentStatus);
+            });
+        });
+
+        // Modal functions
+        window.closeOrderModal = function () {
+            document.getElementById('orderModal').classList.remove('show');
+            currentOrderId = null;
+        };
+
+        window.viewOrder = async function (orderId) {
+            try {
+                const order = await orderService.getOrder(orderId);
+                currentOrderId = orderId;
+
+                const details = document.getElementById('orderDetails');
+                details.innerHTML = `
+                    <div class="order-info">
+                        <p><strong>Номер замовлення:</strong> #${order.id}</p>
+                        <p><strong>Клієнт:</strong> ${order.customerName}</p>
+                        <p><strong>Телефон:</strong> ${order.customerPhone}</p>
+                        <p><strong>Адреса:</strong> ${order.deliveryAddress}</p>
+                        <p><strong>Дата:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+                        <p><strong>Статус:</strong> ${getStatusName(order.status)}</p>
+                    </div>
+                    <div class="order-items">
+                        <h3>Позиції замовлення:</h3>
+                        <ul>
+                            ${order.items.map(item => `
+                                <li>
+                                    ${item.name} x ${item.quantity} = ${item.price * item.quantity} грн
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <p class="order-total"><strong>Загальна сума:</strong> ${order.totalAmount} грн</p>
+                    </div>
+                `;
+
+                document.getElementById('orderStatus').value = order.status;
+                document.getElementById('orderModal').classList.add('show');
+            } catch (error) {
+                console.error('Error loading order:', error);
+                showMessage('Помилка завантаження замовлення', 'error');
+            }
+        };
+
+        window.updateOrderStatus = function () {
+            const status = document.getElementById('orderStatus').value;
+            // You can add validation or confirmation here if needed
+        };
+
+        window.saveOrderStatus = async function () {
+            if (!currentOrderId) return;
+
+            const newStatus = document.getElementById('orderStatus').value;
+            try {
+                await orderService.updateOrderStatus(currentOrderId, newStatus);
+                showMessage('Статус замовлення оновлено', 'success');
+                closeOrderModal();
+                loadOrders(currentStatus);
+            } catch (error) {
+                console.error('Error updating order status:', error);
+                showMessage('Помилка оновлення статусу', 'error');
+            }
+        };
+
+        function showMessage(message, type) {
+            const modal = document.createElement('div');
+            modal.className = `modal show ${type}`;
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <p>${message}</p>
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Load orders on page load
+        loadOrders();
+    </script>
+</body>
+
+</html>

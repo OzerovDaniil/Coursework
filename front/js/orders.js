@@ -1,4 +1,4 @@
-import { orderService, authService } from 'api.js';
+import { orderService, authService } from './api.js';
 
 class OrdersManager {
     constructor() {

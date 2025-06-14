@@ -23,5 +23,7 @@ namespace SushiManagementSystem.Application.DTOs
         [Required(ErrorMessage = "Ціна обов'язкова")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Ціна повинна бути більшою за 0")]
         public decimal Price { get; set; }
+
+        public string? SpecialInstructions { get; set; }
     }
 }

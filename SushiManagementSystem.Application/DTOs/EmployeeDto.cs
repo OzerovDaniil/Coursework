@@ -10,16 +10,21 @@ namespace SushiManagementSystem.Application.DTOs
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Повне ім'я обов'язкове")]
-        [StringLength(100, ErrorMessage = "Ім'я не може перевищувати 100 символів")]
-        public required string FullName { get; set; }
+        [Required(ErrorMessage = "Username обов'язковий")]
+        public required string Username { get; set; }
 
-        [Required(ErrorMessage = "Посада обов'язкова")]
-        [StringLength(50, ErrorMessage = "Посада не може перевищувати 50 символів")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Посада може містити лише літери та пробіли")]
-        public required string Position { get; set; }
+        [Required(ErrorMessage = "Пароль обов'язковий")]
+        public required string PasswordHash { get; set; }
 
+        [Required(ErrorMessage = "Роль обов'язкова")]
+        public required string Role { get; set; }
+
+        [Required(ErrorMessage = "Email обов'язковий")]
+        [EmailAddress(ErrorMessage = "Некоректна електронна пошта")]
+        public required string Email { get; set; }
+
+        [Required(ErrorMessage = "Телефон обов'язковий")]
         [Phone(ErrorMessage = "Некоректний номер телефону")]
-        public string? PhoneNumber { get; set; }
+        public required string PhoneNumber { get; set; }
     }
 }

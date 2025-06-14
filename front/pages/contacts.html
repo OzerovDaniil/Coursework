@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакти - Суші-Майстер</title>
+    <link rel="stylesheet" href="/front/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="/front/images/favicon.ico">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="contacts-page">
+        <section class="contacts-hero">
+            <h1>Контакти</h1>
+            <p class="subtitle">Зв'яжіться з нами будь-яким зручним способом</p>
+        </section>
+
+        <section class="contacts-content">
+            <div class="contacts-grid">
+                <div class="contact-info">
+                    <h2>Наші контакти</h2>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <h3>Адреса</h3>
+                            <p>📍 вул. Сушиста, 1</p>
+                            <p>м. Київ, 01001</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Телефони</h3>
+                            <p>📞 +380 44 123 4567</p>
+                            <p>📱 +380 50 987 6543</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Email</h3>
+                            <p>✉️ info@sushi-master.ua</p>
+                            <p>✉️ orders@sushi-master.ua</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Графік роботи</h3>
+                            <p>Пн-Пт: 10:00 - 22:00</p>
+                            <p>Сб-Нд: 11:00 - 23:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h2>Напишіть нам</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Ваше ім'я:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон:</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Тема:</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Оберіть тему</option>
+                                <option value="order">Замовлення</option>
+                                <option value="feedback">Відгук</option>
+                                <option value="cooperation">Співпраця</option>
+                                <option value="other">Інше</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Повідомлення:</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Надіслати</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="map-section">
+                <h2>Як нас знайти</h2>
+                <div class="map-container">
+                    <!-- Тут буде карта Google Maps -->
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.827853398542!2d30.5194543!3d50.4483813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce56b2456d3b%3A0xd062ae171b57e947!2z0YPQuy4g0JrRgNC10LzQu9GM0L3QtdC90LAsIDEsINCa0LjRl9Cy!5e0!3m2!1suk!2sua!4v1647881234567!5m2!1suk!2sua"
+                        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>📞 +380 44 123 4567</p>
+                <p>✉️ info@sushi-master.ua</p>
+                <p>📍 вул. Сушиста, 1, м. Київ</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Слідкуйте за нами</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Telegram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Суші-Майстер. Всі права захищені.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { settingsService } from '/front/js/api.js';
+
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Load contact information
+        async function loadContactInfo() {
+            try {
+                const settings = await settingsService.getSettings();
+                // Update contact information in the page
+                const contactDetails = document.querySelector('.contact-details');
+                if (contactDetails) {
+                    contactDetails.innerHTML = `
+                        <div class="contact-item">
+                            <h3>Адреса</h3>
+                            <p>📍 ${settings.contactInfo.address}</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Телефони</h3>
+                            <p>📞 ${settings.contactInfo.phone}</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Email</h3>
+                            <p>✉️ ${settings.contactInfo.email}</p>
+                        </div>
+                        <div class="contact-item">
+                            <h3>Графік роботи</h3>
+                            <p>Пн-Пт: ${settings.workingHours.weekday.open} - ${settings.workingHours.weekday.close}</p>
+                            <p>Сб-Нд: ${settings.workingHours.weekend.open} - ${settings.workingHours.weekend.close}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading contact info:', error);
+                // Fallback to static content if API fails
+            }
+        }
+
+        // Form validation
+        function validateForm(formData) {
+            const errors = [];
+
+            if (!formData.name.trim()) {
+                errors.push('Будь ласка, введіть ваше ім\'я');
+            }
+
+            if (!formData.email.trim()) {
+                errors.push('Будь ласка, введіть email');
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+                errors.push('Будь ласка, введіть коректний email');
+            }
+
+            if (!formData.phone.trim()) {
+                errors.push('Будь ласка, введіть номер телефону');
+            } else if (!/^\+?[\d\s-]{10,}$/.test(formData.phone)) {
+                errors.push('Будь ласка, введіть коректний номер телефону');
+            }
+
+            if (!formData.subject) {
+                errors.push('Будь ласка, оберіть тему повідомлення');
+            }
+
+            if (!formData.message.trim()) {
+                errors.push('Будь ласка, введіть повідомлення');
+            }
+
+            return errors;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.querySelector('.contact-form').prepend(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Remove any existing error messages
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            // Validate form
+            const errors = validateForm(formData);
+            if (errors.length > 0) {
+                showError(errors.join('\n'));
+                return;
+            }
+
+            try {
+                // Here you would typically send the form data to your backend
+                // For now, we'll just show a success message
+                alert('Дякуємо за ваше повідомлення! Ми зв\'яжемося з вами найближчим часом.');
+                e.target.reset();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                showError('Виникла помилка при відправці повідомлення. Будь ласка, спробуйте пізніше.');
+            }
+        });
+
+        // Load contact information when the page loads
+        document.addEventListener('DOMContentLoaded', loadContactInfo);
+    </script>
+</body>
+
+</html>

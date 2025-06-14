@@ -19,5 +19,10 @@ namespace SushiManagementSystem.Application.DTOs
         [Required(ErrorMessage = "Кількість обов'язкова")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Кількість повинна бути більшою за 0")]
         public decimal Quantity { get; set; }
+
+        [Required(ErrorMessage = "Одиниця виміру обов'язкова")]
+        public required string Unit { get; set; }
+
+        public string? SpecialInstructions { get; set; }
     }
 }

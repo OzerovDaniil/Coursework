@@ -5,67 +5,170 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Меню - Суші-Майстер</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="/front/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="/front/images/favicon.ico">
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="logo">Суші-Майстер</div>
-            <ul class="menu">
-                <li><a href="../index.html">Головна</a></li>
-                <li><a href="orders.html">Замовлення</a></li>
-                <li><a href="admin.html">Адміністрування</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div id="header-placeholder"></div>
 
-    <main>
-        <h1>Управління меню</h1>
+    <main class="menu-page">
+        <section class="menu-hero">
+            <h1>Наше меню</h1>
+            <p class="subtitle">Смачні суші та роли від наших шефів</p>
+        </section>
 
-        <div class="menu-container">
-            <div class="menu-sidebar">
-                <h2>Категорії</h2>
-                <ul id="categoryList" class="category-list">
-                    <li class="active" data-category="all">Всі страви</li>
-                    <li data-category="sushi">Суші</li>
-                    <li data-category="rolls">Роли</li>
-                    <li data-category="sets">Сети</li>
-                    <li data-category="drinks">Напої</li>
-                    <li data-category="desserts">Десерти</li>
-                </ul>
-
-                <div class="admin-controls">
-                    <h2>Управління</h2>
-                    <button id="addItemBtn" class="primary-btn">Додати страву</button>
-                    <button id="addCategoryBtn">Додати категорію</button>
-                </div>
+        <section class="menu-content">
+            <div class="menu-filters">
+                <button class="filter-btn active" data-category="all">Всі</button>
+                <button class="filter-btn" data-category="rolls">Роли</button>
+                <button class="filter-btn" data-category="sushi">Суші</button>
+                <button class="filter-btn" data-category="sets">Сети</button>
+                <button class="filter-btn" data-category="drinks">Напої</button>
             </div>
 
-            <div class="menu-content">
-                <div class="search-filter">
-                    <input type="text" id="searchMenu" placeholder="Пошук за назвою...">
-                    <select id="sortMenu">
-                        <option value="name">За назвою</option>
-                        <option value="price_asc">За ціною (зростання)</option>
-                        <option value="price_desc">За ціною (спадання)</option>
-                        <option value="popularity">За популярністю</option>
-                    </select>
-                </div>
-
-                <div id="menuItemsList" class="menu-items-grid">
-                    <p class="loading-indicator">Завантаження меню...</p>
-                </div>
+            <div class="menu-grid" id="menuGrid">
+                <!-- Тут будуть елементи меню -->
             </div>
-        </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 Суші-Майстер. Всі права захищені.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>📞 +380 44 123 4567</p>
+                <p>✉️ info@sushi-master.ua</p>
+                <p>📍 вул. Сушиста, 1, м. Київ</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Слідкуйте за нами</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Telegram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Суші-Майстер. Всі права захищені.</p>
+        </div>
     </footer>
 
-    <script src="../js/api.js"></script>
-    <script src="../js/main.js"></script>
+    <script type="module">
+        import { menuService } from '/front/js/api.js';
+
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Фільтрація меню
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const menuGrid = document.getElementById('menuGrid');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Видаляємо активний клас з усіх кнопок
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Додаємо активний клас натиснутій кнопці
+                button.classList.add('active');
+
+                const category = button.dataset.category;
+                const menuItems = document.querySelectorAll('.menu-item');
+
+                // Фільтруємо елементи меню
+                menuItems.forEach(item => {
+                    if (category === 'all' || item.dataset.category === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Завантаження меню
+        async function loadMenu() {
+            try {
+                const menuItems = await menuService.getMenuItems();
+                if (menuGrid) {
+                    menuGrid.innerHTML = menuItems.map(item => `
+                        <div class="menu-item" data-category="${item.category}">
+                            <img src="${item.imageUrl}" alt="${item.name}" class="menu-item-image">
+                            <div class="menu-item-content">
+                                <h3>${item.name}</h3>
+                                <p class="description">${item.description}</p>
+                                <div class="menu-item-footer">
+                                    <span class="price">${item.price} ₴</span>
+                                    <button class="btn btn-primary add-to-cart" data-id="${item.id}">
+                                        Додати в кошик
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Додаємо обробники для кнопок "Додати в кошик"
+                    document.querySelectorAll('.add-to-cart').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const itemId = button.dataset.id;
+                            const item = menuItems.find(i => i.id === parseInt(itemId));
+                            if (item) {
+                                addToCart(item);
+                            }
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error('Помилка завантаження меню:', error);
+                showMessage('Помилка завантаження меню. Спробуйте оновити сторінку.', 'error');
+            }
+        }
+
+        // Функція для додавання товару в кошик
+        function addToCart(item) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(i => i.id === item.id);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showMessage('Товар додано до кошика', 'success');
+        }
+
+        // Функція для показу повідомлень
+        function showMessage(message, type) {
+            const modal = document.createElement('div');
+            modal.className = `modal show ${type}`;
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <p>${message}</p>
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Завантажуємо меню при завантаженні сторінки
+        loadMenu();
+    </script>
 </body>
 
 </html>

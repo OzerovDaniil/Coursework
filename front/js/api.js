@@ -1,64 +1,333 @@
-const API_BASE_URL = 'http://localhost:5067/api';
+const API_URL = 'http://localhost:5000/api';
 
-// Функція для виконання запитів до API
-async function fetchApi(endpoint, method = 'GET', data = null) {
-    const options = {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    };
-
-    // Додаємо токен авторизації з localStorage якщо він є
+function getAuthHeaders() {
     const token = localStorage.getItem('authToken');
-    if (token) {
-        options.headers['Authorization'] = `Bearer ${token}`;
-    }
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+}
 
-    // Додаємо тіло запиту для методів POST/PUT
-    if (data && (method === 'POST' || method === 'PUT')) {
-        options.body = JSON.stringify(data);
-    }
+// Auth Service
+export const authService = {
+    async login(credentials) {
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        });
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/${endpoint}`, options);
-
-        // Перевіряємо статус відповіді
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Сталася помилка при запиті до API');
+            throw new Error('Login failed');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userRole', data.role);
+        localStorage.setItem('userName', data.username);
+        return data;
+    },
+
+    async register(userData) {
+        const response = await fetch(`${API_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Registration failed');
         }
 
         return await response.json();
-    } catch (error) {
-        console.error('Помилка API:', error);
-        throw error;
+    },
+
+    logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+    },
+
+    isAuthenticated() {
+        return !!localStorage.getItem('authToken');
+    },
+
+    getAuthToken() {
+        return localStorage.getItem('authToken');
+    },
+
+    getUserRole() {
+        return localStorage.getItem('userRole');
     }
-}
+};
 
-// Функції для роботи з API
-const api = {
-    // Автентифікація
-    login: (username, password) => {
-        return fetchApi('auth/login', 'POST', { username, password });
-    },
-
-    // Робота з меню
-    getMenuItems: () => {
-        return fetchApi('menu');
-    },
-    getMenuItem: (id) => {
-        return fetchApi(`menu/${id}`);
+// Menu Service
+export const menuService = {
+    async getMenuItems() {
+        const headers = { ...getAuthHeaders() };
+        const response = await fetch(`${API_URL}/menu`, { headers });
+        if (!response.ok) {
+            throw new Error('Failed to fetch menu items');
+        }
+        return await response.json();
     },
 
-    // Робота з замовленнями
-    getOrders: () => {
-        return fetchApi('orders');
+    async addMenuItem(item) {
+        const response = await fetch(`${API_URL}/menu`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeaders()
+            },
+            body: JSON.stringify(item)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to add menu item');
+        }
+
+        return await response.json();
     },
-    createOrder: (orderData) => {
-        return fetchApi('orders', 'POST', orderData);
+
+    async updateMenuItem(id, item) {
+        const response = await fetch(`${API_URL}/menu/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeaders()
+            },
+            body: JSON.stringify(item)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update menu item');
+        }
+
+        return await response.json();
     },
-    updateOrderStatus: (orderId, status) => {
-        return fetchApi(`orders/${orderId}/status`, 'PUT', { status });
+
+    async deleteMenuItem(id) {
+        const response = await fetch(`${API_URL}/menu/${id}`, {
+            method: 'DELETE',
+            headers: { ...getAuthHeaders() }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete menu item');
+        }
+    }
+};
+
+// Order Service
+export const orderService = {
+    async createOrder(orderData) {
+        const response = await fetch(`${API_URL}/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create order');
+        }
+
+        return await response.json();
+    },
+
+    async getOrders() {
+        const response = await fetch(`${API_URL}/orders`, {
+            headers: {
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch orders');
+        }
+
+        return await response.json();
+    },
+
+    async updateOrderStatus(orderId, status) {
+        const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify({ status })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update order status');
+        }
+
+        return await response.json();
+    },
+
+    async cancelOrder(orderId) {
+        const response = await fetch(`${API_URL}/orders/${orderId}/cancel`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to cancel order');
+        }
+    }
+};
+
+// Employee Service
+export const employeeService = {
+    async getEmployees() {
+        const response = await fetch(`${API_URL}/employees`, {
+            headers: {
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch employees');
+        }
+
+        return await response.json();
+    },
+
+    async addEmployee(employeeData) {
+        const response = await fetch(`${API_URL}/employees`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify(employeeData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to add employee');
+        }
+
+        return await response.json();
+    },
+
+    async updateEmployee(id, employeeData) {
+        const response = await fetch(`${API_URL}/employees/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify(employeeData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update employee');
+        }
+
+        return await response.json();
+    },
+
+    async deleteEmployee(id) {
+        const response = await fetch(`${API_URL}/employees/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete employee');
+        }
+    }
+};
+
+// Settings Service
+export const settingsService = {
+    async getSettings() {
+        const response = await fetch(`${API_URL}/settings`, {
+            headers: {
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch settings');
+        }
+
+        return await response.json();
+    },
+
+    async updateWorkingHours(workingHours) {
+        const response = await fetch(`${API_URL}/settings/working-hours`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify({ workingHours })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update working hours');
+        }
+
+        return await response.json();
+    },
+
+    async updateRestaurantStatus(isOpen) {
+        const response = await fetch(`${API_URL}/settings/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify({ isOpen })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update restaurant status');
+        }
+
+        return await response.json();
+    },
+
+    async updateContactInfo(contactInfo) {
+        const response = await fetch(`${API_URL}/settings/contact-info`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify(contactInfo)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update contact info');
+        }
+
+        return await response.json();
+    },
+
+    async updateSocialMedia(socialMedia) {
+        const response = await fetch(`${API_URL}/settings/social-media`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authService.getAuthToken()}`
+            },
+            body: JSON.stringify(socialMedia)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update social media links');
+        }
+
+        return await response.json();
     }
 };

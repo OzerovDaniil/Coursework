@@ -13,8 +13,15 @@ namespace SushiManagementSystem.Application.Mappings
         public MappingProfile()
         {
             CreateMap<MenuItem, MenuItemDto>().ReverseMap();
-            // Позже добавь маппинги для других сущностей, например:
-            // CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<OrderItem, OrderItemDto>().ReverseMap();
+            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<Customer, CustomerDto>().ReverseMap();
+            CreateMap<Inventory, InventoryDto>().ReverseMap();
+            CreateMap<Ingredient, IngredientDto>().ReverseMap();
+            CreateMap<RecipeItem, RecipeItemDto>().ReverseMap();
+            CreateMap<Employee, EmployeeDto>().ReverseMap();
+            CreateMap<LoginDto, Employee>().ReverseMap();
+            CreateMap<RegisterDto, Employee>().ReverseMap();
         }
     }
 }

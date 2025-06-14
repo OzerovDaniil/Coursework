@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управління співробітниками - Адмін-панель</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="admin-page">
+        <div class="admin-hero">
+            <h1>Управління співробітниками</h1>
+            <p class="subtitle">Додавайте, редагуйте та видаляйте співробітників</p>
+        </div>
+
+        <div class="admin-actions">
+            <button class="btn btn-primary" onclick="openAddEmployeeModal()">Додати співробітника</button>
+        </div>
+
+        <div class="admin-grid" id="employees-grid">
+            <!-- Employees will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Add/Edit Employee Modal -->
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEmployeeModal()">&times;</span>
+            <h2 id="modalTitle">Додати співробітника</h2>
+            <form id="employeeForm" onsubmit="handleEmployeeSubmit(event)">
+                <input type="hidden" id="employeeId">
+                <div class="form-group">
+                    <label for="employeeUsername">Логін:</label>
+                    <input type="text" id="employeeUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeePassword">Пароль:</label>
+                    <input type="password" id="employeePassword" name="password">
+                    <small>Залиште порожнім, щоб не змінювати пароль</small>
+                </div>
+                <div class="form-group">
+                    <label for="employeeEmail">Email:</label>
+                    <input type="email" id="employeeEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeePhone">Телефон:</label>
+                    <input type="tel" id="employeePhone" name="phoneNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeRole">Роль:</label>
+                    <select id="employeeRole" name="role" required>
+                        <option value="employee">Співробітник</option>
+                        <option value="admin">Адміністратор</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employeePosition">Посада:</label>
+                    <input type="text" id="employeePosition" name="position" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeActive">Статус:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="employeeActive" name="isActive" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Зберегти</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Адреса: вул. Суши, 1</p>
+                <p>Телефон: +380 12 345 6789</p>
+                <p>Email: info@sushi-master.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Соціальні мережі</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Check access rights
+        if (!authService.isAuthenticated() || !authService.hasRole('admin')) {
+            window.location.href = '../../index.html';
+        }
+
+        // Load employees
+        async function loadEmployees() {
+            try {
+                const employees = await employeeService.getEmployees();
+                const grid = document.getElementById('employees-grid');
+                grid.innerHTML = employees.map(employee => `
+                    <div class="admin-card">
+                        <h3>${employee.username}</h3>
+                        <p>Email: ${employee.email}</p>
+                        <p>Телефон: ${employee.phoneNumber}</p>
+                        <p>Посада: ${employee.position}</p>
+                        <p>Роль: ${getRoleName(employee.role)}</p>
+                        <p>Статус: ${employee.isActive ? 'Активний' : 'Неактивний'}</p>
+                        <div class="admin-actions">
+                            <button class="btn btn-secondary" onclick="editEmployee(${employee.id})">Редагувати</button>
+                            <button class="btn btn-danger" onclick="deleteEmployee(${employee.id})">Видалити</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading employees:', error);
+                showMessage('Помилка завантаження співробітників', 'error');
+            }
+        }
+
+        function getRoleName(role) {
+            const roles = {
+                'admin': 'Адміністратор',
+                'employee': 'Співробітник'
+            };
+            return roles[role] || role;
+        }
+
+        // Modal functions
+        window.openAddEmployeeModal = function () {
+            document.getElementById('modalTitle').textContent = 'Додати співробітника';
+            document.getElementById('employeeForm').reset();
+            document.getElementById('employeeId').value = '';
+            document.getElementById('employeePassword').required = true;
+            document.getElementById('employeeModal').classList.add('show');
+        };
+
+        window.closeEmployeeModal = function () {
+            document.getElementById('employeeModal').classList.remove('show');
+        };
+
+        window.editEmployee = async function (employeeId) {
+            try {
+                const employee = await employeeService.getEmployee(employeeId);
+                document.getElementById('modalTitle').textContent = 'Редагувати співробітника';
+                document.getElementById('employeeId').value = employee.id;
+                document.getElementById('employeeUsername').value = employee.username;
+                document.getElementById('employeePassword').required = false;
+                document.getElementById('employeeEmail').value = employee.email;
+                document.getElementById('employeePhone').value = employee.phoneNumber;
+                document.getElementById('employeeRole').value = employee.role;
+                document.getElementById('employeePosition').value = employee.position;
+                document.getElementById('employeeActive').checked = employee.isActive;
+                document.getElementById('employeeModal').classList.add('show');
+            } catch (error) {
+                console.error('Error loading employee:', error);
+                showMessage('Помилка завантаження співробітника', 'error');
+            }
+        };
+
+        window.deleteEmployee = async function (employeeId) {
+            if (confirm('Ви впевнені, що хочете видалити цього співробітника?')) {
+                try {
+                    await employeeService.deleteEmployee(employeeId);
+                    showMessage('Співробітника видалено', 'success');
+                    loadEmployees();
+                } catch (error) {
+                    console.error('Error deleting employee:', error);
+                    showMessage('Помилка видалення співробітника', 'error');
+                }
+            }
+        };
+
+        window.handleEmployeeSubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const employeeData = {
+                id: document.getElementById('employeeId').value || null,
+                username: formData.get('username'),
+                email: formData.get('email'),
+                phoneNumber: formData.get('phoneNumber'),
+                role: formData.get('role'),
+                position: formData.get('position'),
+                isActive: formData.get('isActive') === 'on'
+            };
+
+            // Only include password if it's provided
+            const password = formData.get('password');
+            if (password) {
+                employeeData.password = password;
+            }
+
+            try {
+                if (employeeData.id) {
+                    await employeeService.updateEmployee(employeeData.id, employeeData);
+                    showMessage('Співробітника оновлено', 'success');
+                } else {
+                    await employeeService.addEmployee(employeeData);
+                    showMessage('Співробітника додано', 'success');
+                }
+                closeEmployeeModal();
+                loadEmployees();
+            } catch (error) {
+                console.error('Error saving employee:', error);
+                showMessage('Помилка збереження співробітника', 'error');
+            }
+        };
+
+        function showMessage(message, type) {
+            const modal = document.createElement('div');
+            modal.className = `modal show ${type}`;
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <p>${message}</p>
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Load employees on page load
+        loadEmployees();
+    </script>
+</body>
+
+</html>

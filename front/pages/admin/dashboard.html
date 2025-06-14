@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Суші-Майстер - Панель керування</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="admin-page">
+        <section class="admin-hero">
+            <h1>Панель керування</h1>
+            <p class="subtitle">Управління рестораном</p>
+        </section>
+
+        <section class="admin-content">
+            <div class="admin-grid">
+                <div class="admin-card">
+                    <h2>Замовлення</h2>
+                    <div class="admin-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="pendingOrders">0</span>
+                            <span class="stat-label">В обробці</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="preparingOrders">0</span>
+                            <span class="stat-label">Готуються</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="readyOrders">0</span>
+                            <span class="stat-label">Готові</span>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="location.href='/pages/admin/orders.html'">
+                            Управління замовленнями
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Меню</h2>
+                    <div class="admin-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalItems">0</span>
+                            <span class="stat-label">Всього страв</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="activeItems">0</span>
+                            <span class="stat-label">Активних</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="popularItems">0</span>
+                            <span class="stat-label">Популярних</span>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="location.href='/pages/admin/menu.html'">
+                            Управління меню
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Співробітники</h2>
+                    <div class="admin-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalEmployees">0</span>
+                            <span class="stat-label">Всього</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="activeEmployees">0</span>
+                            <span class="stat-label">Активних</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="onDutyEmployees">0</span>
+                            <span class="stat-label">На зміні</span>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="location.href='/pages/admin/employees.html'">
+                            Управління персоналом
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Налаштування</h2>
+                    <div class="admin-settings">
+                        <div class="setting-item">
+                            <label>Графік роботи</label>
+                            <div class="working-hours">
+                                <div class="time-range">
+                                    <span>Пн-Пт:</span>
+                                    <input type="time" id="weekdayStart" value="10:00">
+                                    <span>-</span>
+                                    <input type="time" id="weekdayEnd" value="22:00">
+                                </div>
+                                <div class="time-range">
+                                    <span>Сб-Нд:</span>
+                                    <input type="time" id="weekendStart" value="11:00">
+                                    <span>-</span>
+                                    <input type="time" id="weekendEnd" value="23:00">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label>Статус ресторану</label>
+                            <div class="restaurant-status">
+                                <label class="switch">
+                                    <input type="checkbox" id="restaurantStatus" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="status-text">Відкрито</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" id="saveSettings">
+                            Зберегти налаштування
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>📞 +380 44 123 4567</p>
+                <p>✉️ info@sushi-master.ua</p>
+                <p>📍 вул. Сушиста, 1, м. Київ</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Слідкуйте за нами</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Telegram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Суші-Майстер. Всі права захищені.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+        // Перевірка прав доступу
+        document.addEventListener('DOMContentLoaded', async () => {
+            const authToken = localStorage.getItem('authToken');
+            const userRole = localStorage.getItem('userRole');
+
+            if (!authToken || (userRole !== 'admin' && userRole !== 'employee')) {
+                window.location.href = '/index.html';
+                return;
+            }
+
+            // Завантаження статистики
+            try {
+                const stats = await api.getAdminStats();
+                updateStats(stats);
+            } catch (error) {
+                console.error('Помилка завантаження статистики:', error);
+            }
+
+            // Завантаження налаштувань
+            try {
+                const settings = await api.getWorkingHours();
+                updateSettings(settings);
+            } catch (error) {
+                console.error('Помилка завантаження налаштувань:', error);
+            }
+        });
+
+        // Оновлення статистики
+        function updateStats(stats) {
+            document.getElementById('pendingOrders').textContent = stats.pendingOrders || 0;
+            document.getElementById('preparingOrders').textContent = stats.preparingOrders || 0;
+            document.getElementById('readyOrders').textContent = stats.readyOrders || 0;
+            document.getElementById('totalItems').textContent = stats.totalItems || 0;
+            document.getElementById('activeItems').textContent = stats.activeItems || 0;
+            document.getElementById('popularItems').textContent = stats.popularItems || 0;
+            document.getElementById('totalEmployees').textContent = stats.totalEmployees || 0;
+            document.getElementById('activeEmployees').textContent = stats.activeEmployees || 0;
+            document.getElementById('onDutyEmployees').textContent = stats.onDutyEmployees || 0;
+        }
+
+        // Оновлення налаштувань
+        function updateSettings(settings) {
+            document.getElementById('weekdayStart').value = settings.weekdayStart;
+            document.getElementById('weekdayEnd').value = settings.weekdayEnd;
+            document.getElementById('weekendStart').value = settings.weekendStart;
+            document.getElementById('weekendEnd').value = settings.weekendEnd;
+            document.getElementById('restaurantStatus').checked = settings.isOpen;
+            updateStatusText(settings.isOpen);
+        }
+
+        // Оновлення тексту статусу
+        function updateStatusText(isOpen) {
+            const statusText = document.querySelector('.status-text');
+            statusText.textContent = isOpen ? 'Відкрито' : 'Закрито';
+            statusText.className = `status-text ${isOpen ? 'open' : 'closed'}`;
+        }
+
+        // Обробка зміни статусу ресторану
+        document.getElementById('restaurantStatus').addEventListener('change', function () {
+            updateStatusText(this.checked);
+        });
+
+        // Збереження налаштувань
+        document.getElementById('saveSettings').addEventListener('click', async () => {
+            const settings = {
+                weekdayStart: document.getElementById('weekdayStart').value,
+                weekdayEnd: document.getElementById('weekdayEnd').value,
+                weekendStart: document.getElementById('weekendStart').value,
+                weekendEnd: document.getElementById('weekendEnd').value,
+                isOpen: document.getElementById('restaurantStatus').checked
+            };
+
+            try {
+                await api.updateWorkingHours(settings);
+                alert('Налаштування збережено');
+            } catch (error) {
+                console.error('Помилка збереження налаштувань:', error);
+                alert('Виникла помилка при збереженні налаштувань');
+            }
+        });
+    </script>
+</body>
+
+</html>

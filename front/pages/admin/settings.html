@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Налаштування - Адмін-панель</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="admin-page">
+        <div class="admin-hero">
+            <h1>Налаштування</h1>
+            <p class="subtitle">Керуйте налаштуваннями ресторану</p>
+        </div>
+
+        <div class="admin-grid">
+            <div class="admin-card">
+                <h2>Графік роботи</h2>
+                <form id="workingHoursForm" onsubmit="handleWorkingHoursSubmit(event)">
+                    <div class="working-hours">
+                        <div class="time-range">
+                            <span>Пн-Пт:</span>
+                            <input type="time" id="weekdayOpen" name="weekdayOpen" required>
+                            <span>-</span>
+                            <input type="time" id="weekdayClose" name="weekdayClose" required>
+                        </div>
+                        <div class="time-range">
+                            <span>Сб-Нд:</span>
+                            <input type="time" id="weekendOpen" name="weekendOpen" required>
+                            <span>-</span>
+                            <input type="time" id="weekendClose" name="weekendClose" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Зберегти графік</button>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <h2>Статус ресторану</h2>
+                <div class="restaurant-status">
+                    <label class="switch">
+                        <input type="checkbox" id="restaurantStatus" onchange="handleStatusChange()">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="status-text" id="statusText">Відкрито</span>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <h2>Контактна інформація</h2>
+                <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                    <div class="form-group">
+                        <label for="restaurantAddress">Адреса:</label>
+                        <input type="text" id="restaurantAddress" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="restaurantPhone">Телефон:</label>
+                        <input type="tel" id="restaurantPhone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="restaurantEmail">Email:</label>
+                        <input type="email" id="restaurantEmail" name="email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Зберегти контакти</button>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <h2>Соціальні мережі</h2>
+                <form id="socialForm" onsubmit="handleSocialSubmit(event)">
+                    <div class="form-group">
+                        <label for="facebookUrl">Facebook:</label>
+                        <input type="url" id="facebookUrl" name="facebook">
+                    </div>
+                    <div class="form-group">
+                        <label for="instagramUrl">Instagram:</label>
+                        <input type="url" id="instagramUrl" name="instagram">
+                    </div>
+                    <div class="form-group">
+                        <label for="twitterUrl">Twitter:</label>
+                        <input type="url" id="twitterUrl" name="twitter">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Зберегти соцмережі</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Адреса: вул. Суши, 1</p>
+                <p>Телефон: +380 12 345 6789</p>
+                <p>Email: info@sushi-master.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Графік роботи</h3>
+                <p>Пн-Пт: 10:00 - 22:00</p>
+                <p>Сб-Нд: 11:00 - 23:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Соціальні мережі</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        fetch('/front/components/header.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                import('/front/js/main.js');
+            });
+
+        // Check access rights
+        if (!authService.isAuthenticated() || !authService.hasRole('admin')) {
+            window.location.href = '../../index.html';
+        }
+
+        // Load settings
+        async function loadSettings() {
+            try {
+                const settings = await settingsService.getSettings();
+
+                // Working hours
+                document.getElementById('weekdayOpen').value = settings.workingHours.weekday.open;
+                document.getElementById('weekdayClose').value = settings.workingHours.weekday.close;
+                document.getElementById('weekendOpen').value = settings.workingHours.weekend.open;
+                document.getElementById('weekendClose').value = settings.workingHours.weekend.close;
+
+                // Restaurant status
+                const statusCheckbox = document.getElementById('restaurantStatus');
+                const statusText = document.getElementById('statusText');
+                statusCheckbox.checked = settings.isOpen;
+                statusText.textContent = settings.isOpen ? 'Відкрито' : 'Закрито';
+                statusText.className = `status-text ${settings.isOpen ? 'open' : 'closed'}`;
+
+                // Contact information
+                document.getElementById('restaurantAddress').value = settings.contactInfo.address;
+                document.getElementById('restaurantPhone').value = settings.contactInfo.phone;
+                document.getElementById('restaurantEmail').value = settings.contactInfo.email;
+
+                // Social media
+                document.getElementById('facebookUrl').value = settings.socialMedia.facebook || '';
+                document.getElementById('instagramUrl').value = settings.socialMedia.instagram || '';
+                document.getElementById('twitterUrl').value = settings.socialMedia.twitter || '';
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                showMessage('Помилка завантаження налаштувань', 'error');
+            }
+        }
+
+        // Form handlers
+        window.handleWorkingHoursSubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const workingHours = {
+                weekday: {
+                    open: formData.get('weekdayOpen'),
+                    close: formData.get('weekdayClose')
+                },
+                weekend: {
+                    open: formData.get('weekendOpen'),
+                    close: formData.get('weekendClose')
+                }
+            };
+
+            try {
+                await settingsService.updateWorkingHours(workingHours);
+                showMessage('Графік роботи оновлено', 'success');
+            } catch (error) {
+                console.error('Error updating working hours:', error);
+                showMessage('Помилка оновлення графіку', 'error');
+            }
+        };
+
+        window.handleStatusChange = async function () {
+            const isOpen = document.getElementById('restaurantStatus').checked;
+            const statusText = document.getElementById('statusText');
+
+            try {
+                await settingsService.updateRestaurantStatus(isOpen);
+                statusText.textContent = isOpen ? 'Відкрито' : 'Закрито';
+                statusText.className = `status-text ${isOpen ? 'open' : 'closed'}`;
+                showMessage(`Ресторан ${isOpen ? 'відкрито' : 'закрито'}`, 'success');
+            } catch (error) {
+                console.error('Error updating status:', error);
+                showMessage('Помилка оновлення статусу', 'error');
+                // Revert checkbox state
+                document.getElementById('restaurantStatus').checked = !isOpen;
+            }
+        };
+
+        window.handleContactSubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const contactInfo = {
+                address: formData.get('address'),
+                phone: formData.get('phone'),
+                email: formData.get('email')
+            };
+
+            try {
+                await settingsService.updateContactInfo(contactInfo);
+                showMessage('Контактну інформацію оновлено', 'success');
+            } catch (error) {
+                console.error('Error updating contact info:', error);
+                showMessage('Помилка оновлення контактів', 'error');
+            }
+        };
+
+        window.handleSocialSubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const socialMedia = {
+                facebook: formData.get('facebook') || null,
+                instagram: formData.get('instagram') || null,
+                twitter: formData.get('twitter') || null
+            };
+
+            try {
+                await settingsService.updateSocialMedia(socialMedia);
+                showMessage('Соціальні мережі оновлено', 'success');
+            } catch (error) {
+                console.error('Error updating social media:', error);
+                showMessage('Помилка оновлення соцмереж', 'error');
+            }
+        };
+
+        function showMessage(message, type) {
+            const modal = document.createElement('div');
+            modal.className = `modal show ${type}`;
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <p>${message}</p>
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Load settings on page load
+        loadSettings();
+    </script>
+</body>
+
+</html>

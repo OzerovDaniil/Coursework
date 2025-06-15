@@ -1,52 +1,61 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5067/api';
 
 function getAuthHeaders() {
     const token = localStorage.getItem('authToken');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
 }
 
+async function handleResponse(response) {
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Произошла ошибка' }));
+        throw new Error(error.message || 'Произошла ошибка при выполнении запроса');
+    }
+    return response.json();
+}
+
 // Auth Service
 export const authService = {
     async login(credentials) {
-        const response = await fetch(`${API_URL}/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(credentials)
-        });
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
 
-        if (!response.ok) {
-            throw new Error('Login failed');
+            const data = await handleResponse(response);
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userRole', data.role);
+            localStorage.setItem('userName', data.username);
+            return data;
+        } catch (error) {
+            throw new Error(error.message || 'Ошибка входа. Проверьте правильность логина и пароля.');
         }
-
-        const data = await response.json();
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('userRole', data.role);
-        localStorage.setItem('userName', data.username);
-        return data;
     },
 
     async register(userData) {
-        const response = await fetch(`${API_URL}/auth/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        });
+        try {
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
 
-        if (!response.ok) {
-            throw new Error('Registration failed');
+            return await handleResponse(response);
+        } catch (error) {
+            throw new Error(error.message || 'Ошибка регистрации. Возможно, пользователь с таким логином уже существует.');
         }
-
-        return await response.json();
     },
 
     logout() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
         localStorage.removeItem('userName');
+        window.location.href = '/front/index.html';
     },
 
     isAuthenticated() {

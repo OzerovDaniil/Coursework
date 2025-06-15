@@ -89,20 +89,18 @@ header {
 .auth-buttons {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .auth-buttons .btn {
     padding: 0.5rem 1.5rem;
-    border: 2px solid var(--primary-color);
-    background-color: transparent;
-    color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
     font-weight: 500;
+    cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.auth-buttons .btn:hover {
-    background-color: var(--primary-color);
-    color: white;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .auth-buttons .btn-primary {
@@ -112,18 +110,15 @@ header {
 
 .auth-buttons .btn-primary:hover {
     background-color: #ff5252;
-    border-color: #ff5252;
 }
 
 .auth-buttons .btn-secondary {
-    background-color: transparent;
-    border: 2px solid var(--secondary-color);
-    color: var(--secondary-color);
+    background-color: var(--secondary-color);
+    color: white;
 }
 
 .auth-buttons .btn-secondary:hover {
-    background-color: var(--secondary-color);
-    color: white;
+    background-color: #45b7af;
 }
 
 .user-info {
@@ -337,39 +332,46 @@ footer {
 }
 
 .modal.show {
-    display: flex;
+    display: flex !important;
     opacity: 1;
     align-items: center;
     justify-content: center;
 }
 
 .modal-content {
-    background-color: var(--white);
+    background-color: white;
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
     position: relative;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
 }
 
 .modal .close {
     position: absolute;
-    top: 1rem;
     right: 1rem;
+    top: 1rem;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--gray-600);
+    color: var(--dark-color);
     transition: color 0.3s ease;
+    z-index: 1;
 }
 
 .modal .close:hover {
-    color: var(--gray-800);
+    color: var(--primary-color);
 }
 
 .modal h2 {
     margin-bottom: 1.5rem;
-    color: var(--gray-800);
+    color: var(--dark-color);
     font-size: 1.5rem;
 }
 
@@ -380,14 +382,14 @@ footer {
 .modal label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--gray-700);
+    color: var(--dark-color);
     font-weight: 500;
 }
 
 .modal input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid var(--gray-300);
+    border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -395,13 +397,24 @@ footer {
 
 .modal input:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    border-color: var(--primary-color);
 }
 
 .modal button[type="submit"] {
     width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
     margin-top: 1rem;
+}
+
+.modal button[type="submit"]:hover {
+    background-color: #ff5252;
 }
 
 .modal.error .modal-content {

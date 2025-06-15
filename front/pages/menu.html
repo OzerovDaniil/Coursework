@@ -28,7 +28,7 @@
             </div>
 
             <div class="menu-grid" id="menuGrid">
-                <!-- Тут будуть елементи меню -->
+                <!-- Menu items will be loaded here -->
             </div>
         </section>
     </main>
@@ -62,111 +62,71 @@
 
     <script type="module">
         import { menuService } from '/front/js/api.js';
+        import { updateHeader } from '/front/js/header.js';
 
+        // Load header
         fetch('/front/components/header.html')
-            .then(r => r.text())
+            .then(response => response.text())
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
-                import('/front/js/main.js');
+                updateHeader();
             });
 
-        // Фільтрація меню
+        // Menu filtering functionality
         const filterButtons = document.querySelectorAll('.filter-btn');
         const menuGrid = document.getElementById('menuGrid');
+        let currentCategory = 'all';
 
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Видаляємо активний клас з усіх кнопок
+                // Update active button
                 filterButtons.forEach(btn => btn.classList.remove('active'));
-                // Додаємо активний клас натиснутій кнопці
                 button.classList.add('active');
 
-                const category = button.dataset.category;
-                const menuItems = document.querySelectorAll('.menu-item');
-
-                // Фільтруємо елементи меню
-                menuItems.forEach(item => {
-                    if (category === 'all' || item.dataset.category === category) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
+                // Update current category and reload menu
+                currentCategory = button.dataset.category;
+                loadMenu();
             });
         });
 
-        // Завантаження меню
         async function loadMenu() {
             try {
                 const menuItems = await menuService.getMenuItems();
-                if (menuGrid) {
-                    menuGrid.innerHTML = menuItems.map(item => `
-                        <div class="menu-item" data-category="${item.category}">
-                            <img src="${item.imageUrl}" alt="${item.name}" class="menu-item-image">
-                            <div class="menu-item-content">
-                                <h3>${item.name}</h3>
-                                <p class="description">${item.description}</p>
-                                <div class="menu-item-footer">
-                                    <span class="price">${item.price} ₴</span>
-                                    <button class="btn btn-primary add-to-cart" data-id="${item.id}">
-                                        Додати в кошик
-                                    </button>
-                                </div>
+                const filteredItems = currentCategory === 'all'
+                    ? menuItems
+                    : menuItems.filter(item => item.category === currentCategory);
+
+                menuGrid.innerHTML = filteredItems.map(item => `
+                    <div class="menu-item">
+                        <img src="${item.image}" alt="${item.name}" class="menu-item-image">
+                        <div class="menu-item-content">
+                            <h3>${item.name}</h3>
+                            <p class="description">${item.description}</p>
+                            <div class="menu-item-footer">
+                                <span class="price">${item.price} ₴</span>
+                                <button class="btn btn-primary add-to-cart" data-id="${item.id}">
+                                    Додати в кошик
+                                </button>
                             </div>
                         </div>
-                    `).join('');
+                    </div>
+                `).join('');
 
-                    // Додаємо обробники для кнопок "Додати в кошик"
-                    document.querySelectorAll('.add-to-cart').forEach(button => {
-                        button.addEventListener('click', () => {
-                            const itemId = button.dataset.id;
-                            const item = menuItems.find(i => i.id === parseInt(itemId));
-                            if (item) {
-                                addToCart(item);
-                            }
-                        });
+                // Add event listeners to add-to-cart buttons
+                document.querySelectorAll('.add-to-cart').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const itemId = e.target.dataset.id;
+                        // TODO: Implement add to cart functionality
+                        console.log('Add to cart:', itemId);
                     });
-                }
-            } catch (error) {
-                console.error('Помилка завантаження меню:', error);
-                showMessage('Помилка завантаження меню. Спробуйте оновити сторінку.', 'error');
-            }
-        }
-
-        // Функція для додавання товару в кошик
-        function addToCart(item) {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existingItem = cart.find(i => i.id === item.id);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    id: item.id,
-                    name: item.name,
-                    price: item.price,
-                    quantity: 1
                 });
+            } catch (error) {
+                console.error('Error loading menu:', error);
+                menuGrid.innerHTML = '<p class="error-message">Помилка завантаження меню. Спробуйте пізніше.</p>';
             }
-
-            localStorage.setItem('cart', JSON.stringify(cart));
-            showMessage('Товар додано до кошика', 'success');
         }
 
-        // Функція для показу повідомлень
-        function showMessage(message, type) {
-            const modal = document.createElement('div');
-            modal.className = `modal show ${type}`;
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <p>${message}</p>
-                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">OK</button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        // Завантажуємо меню при завантаженні сторінки
+        // Initial menu load
         loadMenu();
     </script>
 </body>

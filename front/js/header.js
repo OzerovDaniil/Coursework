@@ -13,7 +13,19 @@ export async function updateHeader() {
         if (userInfo) {
             userInfo.style.display = 'flex';
             const username = localStorage.getItem('userName');
-            userInfo.querySelector('.username').textContent = username;
+            const usernameSpan = userInfo.querySelector('.username');
+            if (usernameSpan) {
+                usernameSpan.textContent = `Привет, ${username}!`;
+            }
+
+            // Добавляем обработчик для кнопки выхода
+            const logoutBtn = userInfo.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.onclick = () => {
+                    authService.logout();
+                    updateHeader();
+                };
+            }
         }
 
         // Обновляем видимость пунктов меню в зависимости от роли
@@ -51,16 +63,6 @@ export function updateActiveMenuItem() {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
-    // Обработчик для кнопки выхода
-    const logoutBtn = document.querySelector('.logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            authService.logout();
-            updateHeader();
-            window.location.href = '/';
-        });
-    }
-
     // Обработчик для мобильного меню
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
@@ -81,5 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Initial header update
     updateHeader();
 }); 

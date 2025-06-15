@@ -56,12 +56,23 @@
     </footer>
 
     <script type="module">
-        fetch('/front/components/header.html')
-            .then(r => r.text())
-            .then(html => {
+        async function init() {
+            try {
+                const response = await fetch('/front/components/header.html');
+                const html = await response.text();
                 document.getElementById('header-placeholder').innerHTML = html;
-                import('/front/js/main.js');
-            });
+
+                // Даем время DOM обновиться
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                // Теперь импортируем main.js
+                await import('/front/js/main.js');
+            } catch (error) {
+                console.error('Error initializing app:', error);
+            }
+        }
+
+        init();
     </script>
 </body>
 

@@ -57,21 +57,33 @@
 
     <script type="module">
         async function init() {
+            console.log('Starting initialization...');
             try {
+                console.log('Fetching header...');
                 const response = await fetch('/front/components/header.html');
                 const html = await response.text();
-                document.getElementById('header-placeholder').innerHTML = html;
+                console.log('Header HTML received:', html.substring(0, 100) + '...');
+
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                console.log('Header placeholder found:', headerPlaceholder);
+
+                headerPlaceholder.innerHTML = html;
+                console.log('Header HTML inserted');
 
                 // Даем время DOM обновиться
-                await new Promise(resolve => setTimeout(resolve, 0));
+                await new Promise(resolve => setTimeout(resolve, 100));
+                console.log('DOM update delay completed');
 
                 // Теперь импортируем main.js
-                await import('/front/js/main.js');
+                console.log('Importing main.js...');
+                const mainModule = await import('/front/js/main.js');
+                console.log('main.js imported successfully');
             } catch (error) {
-                console.error('Error initializing app:', error);
+                console.error('Error during initialization:', error);
             }
         }
 
+        console.log('Script starting...');
         init();
     </script>
 </body>

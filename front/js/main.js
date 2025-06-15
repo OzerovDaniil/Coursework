@@ -163,8 +163,26 @@ function showMessage(message, type) {
 }
 
 // Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded'); // Отладочный вывод
+console.log('main.js loaded');
+
+// Проверяем, что DOM уже загружен
+if (document.readyState === 'loading') {
+    console.log('DOM still loading, waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    console.log('DOM already loaded, initializing immediately...');
+    initializeApp();
+}
+
+function initializeApp() {
+    console.log('Initializing app...');
+    console.log('Document body:', document.body);
+    console.log('Header placeholder:', document.getElementById('header-placeholder'));
+    console.log('Login button:', document.getElementById('loginBtn'));
+    console.log('Register button:', document.getElementById('registerBtn'));
+    console.log('Login modal:', document.getElementById('loginModal'));
+    console.log('Register modal:', document.getElementById('registerModal'));
+
     initializeModals();
     updateHeader();
-});
+}

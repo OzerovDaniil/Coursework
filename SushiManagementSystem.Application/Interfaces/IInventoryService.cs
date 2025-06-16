@@ -10,7 +10,7 @@ namespace SushiManagementSystem.Application.Interfaces
     {
         Task<IEnumerable<InventoryDto>> GetAllInventoryItemsAsync();
         Task<InventoryDto> GetInventoryItemByIdAsync(int id);
-        Task AddInventoryItemAsync(InventoryDto inventoryDto);
+        Task AddInventoryItemAsync(CreateInventoryDto createInventoryDto);
         Task UpdateInventoryItemAsync(InventoryDto inventoryDto);
         Task DeleteInventoryItemAsync(int id);
     }

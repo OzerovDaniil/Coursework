@@ -36,10 +36,10 @@ namespace SushiManagementSystem.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddInventoryItem([FromBody] InventoryDto inventoryDto)
+        public async Task<IActionResult> AddInventoryItem([FromBody] CreateInventoryDto createInventoryDto)
         {
-            await _inventoryService.AddInventoryItemAsync(inventoryDto);
-            return CreatedAtAction(nameof(GetInventoryItemById), new { id = inventoryDto.Id }, inventoryDto);
+            await _inventoryService.AddInventoryItemAsync(createInventoryDto);
+            return CreatedAtAction(nameof(GetInventoryItemById), new { id = createInventoryDto }, createInventoryDto);
         }
 
         [Authorize]

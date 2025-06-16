@@ -34,9 +34,9 @@ namespace SushiManagementSystem.Application.Services
             return _mapper.Map<OrderDto>(order);
         }
 
-        public async Task AddOrderAsync(OrderDto orderDto)
+        public async Task AddOrderAsync(CreateOrderDto createOrderDto)
         {
-            var order = _mapper.Map<Order>(orderDto);
+            var order = _mapper.Map<Order>(createOrderDto);
             await _unitOfWork.Orders.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();
         }

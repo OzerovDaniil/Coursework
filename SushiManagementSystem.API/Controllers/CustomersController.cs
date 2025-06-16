@@ -37,10 +37,10 @@ namespace SushiManagementSystem.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddCustomer([FromBody] CustomerDto customerDto)
+        public async Task<IActionResult> AddCustomer([FromBody] CreateCustomerDto createCustomerDto)
         {
-            await _customerService.AddCustomerAsync(customerDto);
-            return CreatedAtAction(nameof(GetCustomerById), new { id = customerDto.Id }, customerDto);
+            await _customerService.AddCustomerAsync(createCustomerDto);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = createCustomerDto }, createCustomerDto);
         }
 
         [Authorize]

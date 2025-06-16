@@ -10,7 +10,7 @@ namespace SushiManagementSystem.Application.Interfaces
     {
         Task<IEnumerable<EmployeeDto>> GetAllEmployeesAsync();
         Task<EmployeeDto> GetEmployeeByIdAsync(int id);
-        Task AddEmployeeAsync(EmployeeDto employeeDto);
+        Task AddEmployeeAsync(CreateEmployeeDto createEmployeeDto);
         Task UpdateEmployeeAsync(EmployeeDto employeeDto);
         Task DeleteEmployeeAsync(int id);
     }

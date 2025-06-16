@@ -10,7 +10,7 @@ namespace SushiManagementSystem.Application.Interfaces
     {
         Task<IEnumerable<MenuItemDto>> GetAllMenuItemsAsync();
         Task<MenuItemDto> GetMenuItemByIdAsync(int id);
-        Task AddMenuItemAsync(MenuItemDto menuItemDto);
+        Task AddMenuItemAsync(CreateMenuItemDto createMenuItemDto);
         Task UpdateMenuItemAsync(int id, MenuItemDto menuItemDto);
         Task DeleteMenuItemAsync(int id);
         Task<IEnumerable<MenuItemDto>> GetMenuItemsAsync(MenuItemFilterDto filter);

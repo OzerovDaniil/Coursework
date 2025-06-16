@@ -4,6 +4,7 @@ using SushiManagementSystem.Application.DTOs;
 using SushiManagementSystem.Application.Interfaces;
 using SushiManagementSystem.API.Filters;
 using System.Threading.Tasks;
+using SushiManagementSystem.Application;
 
 namespace SushiManagementSystem.API.Controllers
 {
@@ -38,10 +39,10 @@ namespace SushiManagementSystem.API.Controllers
         [Authorize]
         [ServiceFilter(typeof(ValidationFilter))]
         [HttpPost]
-        public async Task<IActionResult> AddOrder([FromBody] OrderDto orderDto)
+        public async Task<IActionResult> AddOrder([FromBody] CreateOrderDto createOrderDto)
         {
-            await _orderService.AddOrderAsync(orderDto);
-            return CreatedAtAction(nameof(GetOrderById), new { id = orderDto.Id }, orderDto);
+            await _orderService.AddOrderAsync(createOrderDto);
+            return CreatedAtAction(nameof(GetOrderById), new { id = createOrderDto }, createOrderDto);
         }
 
         [Authorize]

@@ -32,9 +32,9 @@ namespace SushiManagementSystem.Application.Services
             return _mapper.Map<EmployeeDto>(employee);
         }
 
-        public async Task AddEmployeeAsync(EmployeeDto employeeDto)
+        public async Task AddEmployeeAsync(CreateEmployeeDto createEmployeeDto)
         {
-            var employee = _mapper.Map<Employee>(employeeDto);
+            var employee = _mapper.Map<Employee>(createEmployeeDto);
             await _unitOfWork.Employees.AddAsync(employee);
             await _unitOfWork.SaveChangesAsync();
         }

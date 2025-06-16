@@ -38,10 +38,10 @@ namespace SushiManagementSystem.API.Controllers
         [Authorize]
         [ServiceFilter(typeof(ValidationFilter))]
         [HttpPost]
-        public async Task<IActionResult> AddMenuItem([FromBody] MenuItemDto menuItemDto)
+        public async Task<IActionResult> AddMenuItem([FromBody] CreateMenuItemDto createMenuItemDto)
         {
-            await _menuService.AddMenuItemAsync(menuItemDto);
-            return CreatedAtAction(nameof(GetMenuItemById), new { id = menuItemDto.Id }, menuItemDto);
+            await _menuService.AddMenuItemAsync(createMenuItemDto);
+            return CreatedAtAction(nameof(GetMenuItemById), new { id = createMenuItemDto }, createMenuItemDto);
         }
 
         [Authorize]

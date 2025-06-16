@@ -34,10 +34,10 @@ namespace SushiManagementSystem.Application.Services
             return _mapper.Map<CustomerDto>(customer);
         }
 
-        public async Task AddCustomerAsync(CustomerDto customerDto)
+        public async Task AddCustomerAsync(CreateCustomerDto createCustomerDto)
         {
-            var customer = _mapper.Map<Customer>(customerDto);
-            await _unitOfWork.Customers.AddAsync(customer);
+            var createCustomer = _mapper.Map<Customer>(createCustomerDto);
+            await _unitOfWork.Customers.AddAsync(createCustomer);
             await _unitOfWork.SaveChangesAsync();
         }
 

@@ -32,9 +32,9 @@ namespace SushiManagementSystem.Application.Services
             return _mapper.Map<InventoryDto>(inventory);
         }
 
-        public async Task AddInventoryItemAsync(InventoryDto inventoryDto)
+        public async Task AddInventoryItemAsync(CreateInventoryDto createInventoryDto)
         {
-            var inventory = _mapper.Map<Inventory>(inventoryDto);
+            var inventory = _mapper.Map<Inventory>(createInventoryDto);
             await _unitOfWork.Inventories.AddAsync(inventory);
             await _unitOfWork.SaveChangesAsync();
         }

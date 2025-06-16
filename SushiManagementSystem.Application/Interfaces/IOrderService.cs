@@ -12,7 +12,7 @@ namespace SushiManagementSystem.Application.Interfaces
     {
         Task<IEnumerable<OrderDto>> GetAllOrdersAsync();
         Task<OrderDto> GetOrderByIdAsync(int id);
-        Task AddOrderAsync(OrderDto orderDto);
+        Task AddOrderAsync(CreateOrderDto createOrderDto);
         Task UpdateOrderAsync(OrderDto orderDto);
         Task DeleteOrderAsync(int id);
     }

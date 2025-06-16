@@ -36,10 +36,10 @@ namespace SushiManagementSystem.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddEmployee([FromBody] EmployeeDto employeeDto)
+        public async Task<IActionResult> AddEmployee([FromBody] CreateEmployeeDto createEmployeeDto)
         {
-            await _employeeService.AddEmployeeAsync(employeeDto);
-            return CreatedAtAction(nameof(GetEmployeeById), new { id = employeeDto.Id }, employeeDto);
+            await _employeeService.AddEmployeeAsync(createEmployeeDto);
+            return CreatedAtAction(nameof(GetEmployeeById), new { id = createEmployeeDto }, createEmployeeDto);
         }
 
         [Authorize]
